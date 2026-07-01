@@ -12,9 +12,12 @@ const cardIcons = [Briefcase, TrendingUp, Target, MessageCircle] as const;
 export function WhyAttendSection() {
   return (
     <Section className="section-shell-tight section-bg-default">
-      <SectionHeader title={whyAttendContent.title} />
+      <SectionHeader
+        eyebrow={whyAttendContent.eyebrow}
+        title={whyAttendContent.title}
+      />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2">
         {whyAttendContent.cards.map((card, index) => {
           const Icon = cardIcons[index];
 
@@ -22,19 +25,22 @@ export function WhyAttendSection() {
             <article
               key={card.title}
               className={cn(
-                "premium-card group flex flex-col p-5 md:p-6",
+                "premium-card group flex gap-4 p-6 md:p-7",
                 "hover:border-orange-200"
               )}
             >
-              <div className="bg-orange-50 text-primary mb-4 flex size-10 items-center justify-center rounded-xl transition-colors group-hover:bg-orange-100">
-                <Icon className="size-5" aria-hidden />
+              <div className="numbered-badge">{index + 1}</div>
+              <div className="min-w-0 flex-1">
+                <div className="icon-badge mb-3 inline-flex">
+                  <Icon className="size-5" aria-hidden />
+                </div>
+                <h3 className="text-foreground text-base font-bold tracking-tight md:text-lg">
+                  {card.title}
+                </h3>
+                <p className="text-muted-foreground mt-2 text-sm leading-relaxed md:text-[0.9375rem]">
+                  {card.description}
+                </p>
               </div>
-              <h3 className="text-foreground text-base font-semibold tracking-tight">
-                {card.title}
-              </h3>
-              <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                {card.description}
-              </p>
             </article>
           );
         })}

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function ThankYouPage() {
   return (
-    <PageShell showHeaderCta={false}>
+    <PageShell showHeaderCta={false} shellVariant="light">
       <main className="container-shell flex flex-1 flex-col items-center justify-center py-16 md:py-24">
         <div className="w-full max-w-lg text-center">
           <div className="bg-orange-50 text-primary mx-auto mb-8 flex size-20 items-center justify-center rounded-full ring-4 ring-orange-100">

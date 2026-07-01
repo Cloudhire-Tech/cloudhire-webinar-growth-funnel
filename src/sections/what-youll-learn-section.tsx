@@ -9,18 +9,20 @@ import { whatYoullLearnContent } from "@/content/what-youll-learn";
 export function WhatYoullLearnSection() {
   return (
     <Section className="section-shell-tight section-bg-alt">
-      <SectionHeader title={whatYoullLearnContent.title} />
+      <SectionHeader
+        eyebrow={whatYoullLearnContent.eyebrow}
+        title={whatYoullLearnContent.title}
+      />
 
-      <div className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-2">
+      <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
         {whatYoullLearnContent.outcomes.map((outcome) => (
           <article
             key={outcome}
-            className="premium-card flex items-start gap-3 border-orange-100/60 p-4 md:p-5"
+            className="premium-card flex items-start gap-3.5 p-5 md:p-6"
           >
-            <CheckCircle2
-              className="text-primary mt-0.5 size-5 shrink-0"
-              aria-hidden
-            />
+            <div className="bg-orange-50 flex size-8 shrink-0 items-center justify-center rounded-full">
+              <CheckCircle2 className="text-primary size-4" aria-hidden />
+            </div>
             <p className="text-foreground text-sm font-medium leading-relaxed md:text-base">
               {outcome}
             </p>

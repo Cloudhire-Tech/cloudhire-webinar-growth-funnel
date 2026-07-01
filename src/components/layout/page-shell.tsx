@@ -8,18 +8,20 @@ type PageShellProps = {
   children: ReactNode;
   className?: string;
   showHeaderCta?: boolean;
+  shellVariant?: "dark" | "light";
 };
 
 export function PageShell({
   children,
   className,
   showHeaderCta = true,
+  shellVariant = "light",
 }: PageShellProps) {
   return (
     <div className="flex min-h-svh flex-col bg-background">
-      <SiteHeader showCta={showHeaderCta} />
+      <SiteHeader showCta={showHeaderCta} variant={shellVariant} />
       <div className={cn("flex flex-1 flex-col", className)}>{children}</div>
-      <SiteFooter />
+      <SiteFooter variant={shellVariant} />
     </div>
   );
 }

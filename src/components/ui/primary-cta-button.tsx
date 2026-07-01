@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export const primaryCtaButtonClassName =
-  "h-12 min-w-[200px] px-8 text-base shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/30";
+  "h-12 min-w-[200px] bg-gradient-to-r from-orange-500 to-orange-600 px-8 text-base shadow-lg shadow-orange-500/30 hover:from-[var(--brand-orange-hover)] hover:to-orange-700 hover:shadow-xl hover:shadow-orange-500/40";
 
 type PrimaryCtaButtonProps = {
   label: string;

@@ -1,4 +1,5 @@
 export const whatYoullLearnContent = {
+  eyebrow: "Your outcomes",
   title: "What You'll Walk Away With",
   outcomes: [
     "A clearer job search strategy",

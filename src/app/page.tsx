@@ -1,4 +1,5 @@
 import { PageShell } from "@/components/layout/page-shell";
+import { TrustStatsBar } from "@/components/section/trust-stats-bar";
 import { FaqSection } from "@/sections/faq-section";
 import { FinalCtaSection } from "@/sections/final-cta-section";
 import { HeroSection } from "@/sections/hero-section";
@@ -12,8 +13,13 @@ import { WhyChooseCloudHireSection } from "@/sections/why-choose-cloudhire-secti
 export default function LandingPage() {
   return (
     <PageShell>
-      <HeroSection />
-      <RegistrationSection />
+      <section className="hero-band">
+        <div className="container-shell grid items-center gap-10 py-12 md:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:py-20">
+          <HeroSection />
+          <RegistrationSection />
+        </div>
+        <TrustStatsBar />
+      </section>
       <WhyAttendSection />
       <WhatYoullLearnSection />
       <WhyChooseCloudHireSection />

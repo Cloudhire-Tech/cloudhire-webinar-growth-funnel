@@ -6,10 +6,10 @@ export function FinalCtaSection() {
   return (
     <Section className="section-shell-tight section-bg-default pb-14 md:pb-16">
       <div className="cta-band mx-auto max-w-3xl text-center">
-        <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+        <h2 className="text-2xl font-bold tracking-tight md:text-4xl">
           {finalCtaContent.headline}
         </h2>
-        <p className="mt-3 text-sm leading-relaxed text-orange-50 md:text-base">
+        <p className="mt-4 text-base leading-relaxed text-orange-50 md:text-lg">
           {finalCtaContent.description}
         </p>
         <div className="section-cta">
@@ -19,6 +19,9 @@ export function FinalCtaSection() {
             className="ring-2 ring-white/90"
           />
         </div>
+        <p className="mt-4 text-xs text-orange-100/80">
+          Free session · Limited seats · Instant confirmation
+        </p>
       </div>
     </Section>
   );

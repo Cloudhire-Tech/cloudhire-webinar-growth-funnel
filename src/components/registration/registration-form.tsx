@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const inputClassName =
-  "h-11 focus-visible:border-orange-500 focus-visible:ring-orange-500/30";
+  "h-10 focus-visible:border-orange-500 focus-visible:ring-orange-500/30";
 
 export function RegistrationForm() {
   const {
@@ -42,9 +42,9 @@ export function RegistrationForm() {
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="space-y-4 text-left"
+      className="space-y-3.5 text-left"
     >
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <Label htmlFor="fullName">
           {registrationContent.fields.fullName.label}
         </Label>
@@ -64,7 +64,7 @@ export function RegistrationForm() {
         ) : null}
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <Label htmlFor="email">{registrationContent.fields.email.label}</Label>
         <Input
           id="email"
@@ -82,7 +82,7 @@ export function RegistrationForm() {
         ) : null}
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <Label htmlFor="mobile">{registrationContent.fields.mobile.label}</Label>
         <Input
           id="mobile"

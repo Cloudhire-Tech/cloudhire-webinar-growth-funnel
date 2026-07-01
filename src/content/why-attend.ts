@@ -1,4 +1,5 @@
 export const whyAttendContent = {
+  eyebrow: "Why attend",
   title: "Why Should You Attend?",
   cards: [
     {

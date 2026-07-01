@@ -55,6 +55,9 @@
 :root {
   /* CloudHire logo stays blue — conversion UI uses orange */
   --brand-blue: #2563eb;
+  --brand-navy: #0c1527;
+  --brand-navy-muted: #141f33;
+  --brand-navy-border: rgba(255, 255, 255, 0.08);
   --brand-orange: #ea580c;
   --brand-orange-hover: #c2410c;
   --brand-orange-light: #fff7ed;
@@ -155,7 +158,7 @@
   }
 
   .section-shell-tight {
-    @apply py-10 md:py-14;
+    @apply py-12 md:py-16;
   }
 
   .section-bg-default {
@@ -163,11 +166,30 @@
   }
 
   .section-bg-alt {
-    @apply bg-orange-50/45;
+    @apply bg-stone-50/90;
   }
 
   .section-cta {
-    @apply mt-8 flex justify-center md:mt-10;
+    @apply mt-10 flex justify-center md:mt-12;
+  }
+
+  .section-eyebrow {
+    @apply text-primary mb-3 text-xs font-semibold tracking-[0.2em] uppercase;
+  }
+
+  .hero-band {
+    @apply relative overflow-hidden bg-white;
+    background-image:
+      radial-gradient(
+        ellipse 80% 55% at 15% -10%,
+        rgba(234, 88, 12, 0.07),
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse 60% 45% at 95% 0%,
+        rgba(250, 250, 249, 0.9),
+        transparent 50%
+      );
   }
 
   .hero-gradient {
@@ -186,7 +208,43 @@
   }
 
   .premium-card {
-    @apply rounded-2xl border border-border/60 bg-card shadow-sm shadow-black/[0.03] transition-all duration-200 hover:border-orange-200/80 hover:shadow-md hover:shadow-orange-500/[0.06];
+    @apply rounded-2xl border border-border/60 bg-card shadow-sm shadow-black/[0.04] transition-all duration-200 hover:border-orange-200/80 hover:shadow-lg hover:shadow-orange-500/[0.07];
+  }
+
+  .premium-card-elevated {
+    @apply rounded-2xl border border-border/60 bg-white shadow-lg shadow-black/[0.06];
+  }
+
+  .numbered-badge {
+    @apply bg-primary flex size-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white;
+  }
+
+  .icon-badge {
+    @apply flex size-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-primary transition-colors group-hover:bg-orange-100;
+  }
+
+  .icon-badge-lg {
+    @apply flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100 text-primary shadow-sm ring-1 ring-orange-100;
+  }
+
+  .stats-bar {
+    @apply border-t border-stone-200/80 bg-stone-50/80;
+  }
+
+  .stat-value {
+    @apply text-primary text-2xl font-bold tracking-tight md:text-3xl;
+  }
+
+  .stat-label {
+    @apply text-muted-foreground mt-1 text-sm;
+  }
+
+  .benefit-pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-orange-100 bg-orange-50/60 px-3 py-1.5 text-xs font-medium text-foreground/80;
+  }
+
+  .trust-check {
+    @apply text-primary size-4 shrink-0;
   }
 
   .grid-pattern {
@@ -196,29 +254,10 @@
   }
 
   .cta-band {
-    @apply rounded-2xl border border-orange-400/30 bg-gradient-to-br from-orange-500 to-orange-600 px-6 py-10 text-white shadow-lg shadow-orange-500/25 md:px-12 md:py-12;
+    @apply relative overflow-hidden rounded-3xl border border-orange-400/20 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 px-6 py-12 text-white shadow-2xl shadow-orange-900/30 md:px-12 md:py-14;
   }
 
   .registration-card {
-    @apply rounded-2xl border border-orange-100 bg-white p-6 shadow-lg shadow-orange-500/10 ring-1 ring-orange-100/80 md:p-8;
-  }
-
-  .expand-panel {
-    display: grid;
-    transition: grid-template-rows 0.35s ease, opacity 0.3s ease;
-  }
-
-  .expand-panel[data-expanded="false"] {
-    grid-template-rows: 0fr;
-    opacity: 0;
-  }
-
-  .expand-panel[data-expanded="true"] {
-    grid-template-rows: 1fr;
-    opacity: 1;
-  }
-
-  .expand-panel-inner {
-    @apply overflow-hidden;
+    @apply rounded-2xl border border-border/60 bg-white p-5 shadow-lg shadow-black/[0.06] md:p-6;
   }
 }

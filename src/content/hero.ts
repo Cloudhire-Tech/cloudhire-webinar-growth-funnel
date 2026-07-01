@@ -1,5 +1,8 @@
 export const heroContent = {
-  headline: "Accelerate Your Job Search with CloudHire",
+  eyebrow: "Free live webinar for job seekers",
+  headline: "Accelerate Your",
+  headlineHighlight: "Job Search",
+  headlineSuffix: "with CloudHire",
   subheading:
     "Join our live webinar to learn practical strategies, discover how successful candidates make the most of CloudHire, and understand how to improve your chances of landing more interviews.",
   primaryCta: "Reserve Your Spot",

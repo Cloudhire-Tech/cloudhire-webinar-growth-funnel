@@ -1,4 +1,5 @@
 export const whyChooseCloudHireContent = {
+  eyebrow: "The platform",
   title: "Why Choose CloudHire?",
   subtitle:
     "More than a job platform — everything you need to support your job search in one place.",

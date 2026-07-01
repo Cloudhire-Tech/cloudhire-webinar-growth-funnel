@@ -5,39 +5,38 @@ import { SectionHeader } from "@/components/section/section-header";
 import { Section } from "@/components/section/section";
 import { whyChooseCloudHireContent } from "@/content/why-choose-cloudhire";
 import { heroContent } from "@/content/hero";
-import { cn } from "@/lib/utils";
 
 const featureIcons = [FileText, Mic, Briefcase, TrendingUp] as const;
 
 export function WhyChooseCloudHireSection() {
   return (
-    <Section className="section-shell-tight section-bg-default">
+    <Section className="section-shell-tight section-bg-alt">
       <SectionHeader
+        eyebrow={whyChooseCloudHireContent.eyebrow}
         title={whyChooseCloudHireContent.title}
         subtitle={whyChooseCloudHireContent.subtitle}
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2">
         {whyChooseCloudHireContent.features.map((feature, index) => {
           const Icon = featureIcons[index];
 
           return (
             <article
               key={feature.title}
-              className={cn(
-                "premium-card group flex flex-col p-5 md:p-6",
-                "hover:border-orange-200"
-              )}
+              className="premium-card group flex gap-5 p-6 md:p-7"
             >
-              <div className="bg-orange-50 text-primary mb-4 flex size-10 items-center justify-center rounded-xl transition-colors group-hover:bg-orange-100">
-                <Icon className="size-5" aria-hidden />
+              <div className="icon-badge-lg">
+                <Icon className="size-6" aria-hidden />
               </div>
-              <h3 className="text-foreground text-base font-semibold tracking-tight">
-                {feature.title}
-              </h3>
-              <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                {feature.description}
-              </p>
+              <div className="min-w-0">
+                <h3 className="text-foreground text-base font-bold tracking-tight md:text-lg">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground mt-2 text-sm leading-relaxed md:text-[0.9375rem]">
+                  {feature.description}
+                </p>
+              </div>
             </article>
           );
         })}

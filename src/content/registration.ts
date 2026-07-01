@@ -1,8 +1,8 @@
 export const registrationContent = {
   title: "Reserve Your Spot",
   revealButton: "Register Now",
-  submitLabel: "Complete Registration",
-  completeSubmitting: "Completing registration...",
+  submitLabel: "Register Now",
+  completeSubmitting: "Registering...",
   fields: {
     fullName: { label: "Full Name", placeholder: "Enter your full name" },
     email: { label: "Email Address", placeholder: "you@example.com" },

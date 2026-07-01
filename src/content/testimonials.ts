@@ -1,4 +1,5 @@
 export const reviewsContent = {
+  eyebrow: "Social proof",
   title: "What Our Users Say",
   subtitle:
     "Hear from candidates who have used CloudHire in their job search.",
