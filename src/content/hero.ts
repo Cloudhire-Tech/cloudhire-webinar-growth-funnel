@@ -1,14 +1,19 @@
 export const heroContent = {
-  eyebrow: "Free live webinar for job seekers",
-  headline: "Accelerate Your",
-  headlineHighlight: "Job Search",
-  headlineSuffix: "with CloudHire",
-  subheading:
-    "Join our live webinar to learn practical strategies, discover how successful candidates make the most of CloudHire, and understand how to improve your chances of landing more interviews.",
-  primaryCta: "Reserve Your Spot",
-  trustBadges: [
-    "Live Expert Session",
-    "Interactive Q&A",
-    "Actionable Career Insights",
+  kicker: "FREE LIVE MASTERCLASS",
+  headlineLine1: "100+ job applications a week.",
+  headlineHighlight: "On autopilot.",
+  subheadlineBefore: "Watch the system that applies to remote jobs at",
+  subheadlineBold: "Indian companies",
+  subheadlineAfter: "for you — live, start to finish.",
+  tickerHeaderLeft: "AUTO-APPLY · RUNNING",
+  tickerHeaderRight: "● LIVE",
+  tickerRows: [
+    { role: "Product Analyst — Remote", meta: "applied · 2m" },
+    { role: "Frontend Developer — Remote", meta: "applied · 9m" },
   ] as const,
+  sessionPills: {
+    dateLabel: "DATE",
+    timeLabel: "TIME",
+    seatsLabel: "SEATS",
+  } as const,
 } as const;

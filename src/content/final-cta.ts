@@ -1,6 +1,9 @@
+import { webinarDetails } from "@/content/webinar";
+
 export const finalCtaContent = {
-  headline: "Ready to Take the Next Step in Your Career?",
-  description:
-    "Reserve your seat today and join hundreds of job seekers learning how to accelerate their job search with CloudHire.",
-  button: "Reserve My Spot",
+  heading:
+    "Every week you apply by hand is a week of roles you never reached.",
+  body: "Join hundreds of Indian professionals who put their applications on autopilot.",
+  button: "Reserve My Free Seat →",
+  microcopy: `${webinarDetails.date} · ${webinarDetails.time} · Free · Seats capped`,
 } as const;

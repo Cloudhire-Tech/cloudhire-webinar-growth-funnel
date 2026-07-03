@@ -20,10 +20,10 @@ export function CloudHireLogo({
       <Image
         src="/images/cloudhire-logo.png"
         alt={siteConfig.name}
-        width={160}
-        height={40}
+        width={128}
+        height={32}
         priority
-        className={cn("h-8 w-auto md:h-9", imageClassName)}
+        className={cn("h-6 w-auto md:h-7", imageClassName)}
       />
     </span>
   );

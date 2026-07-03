@@ -1,26 +1,26 @@
 export const faqContent = {
-  eyebrow: "FAQ",
-  title: "Questions",
+  eyebrow: "BEFORE YOU ASK",
+  heading: "FAQ",
   items: [
     {
       question: "Is the webinar free?",
       answer:
-        "Yes. Registration is free for CloudHire users. There is no cost to attend.",
+        "Yes — completely free. Registration is required because seats are capped.",
     },
     {
-      question: "Who is this session for?",
+      question: "Who should attend?",
       answer:
-        "Anyone actively job searching who wants more interviews, sharper positioning, and a clearer plan for their next move.",
+        "Professionals hunting remote roles at Indian companies, career switchers, and anyone applying for weeks with nothing to show for it.",
     },
     {
       question: "How long is the session?",
       answer:
-        "About 60 minutes, including live Q&A with the CloudHire team.",
+        "About 60 minutes live, followed by an open Q&A.",
     },
     {
-      question: "Will I get a reminder before it starts?",
+      question: "Will I get a recording?",
       answer:
-        "Yes. After you register, you'll receive a confirmation email and reminders before the webinar begins.",
+        "The recording may be shared with registered attendees — but the live demo and Q&A are the reason to be in the room.",
     },
   ] as const,
 } as const;

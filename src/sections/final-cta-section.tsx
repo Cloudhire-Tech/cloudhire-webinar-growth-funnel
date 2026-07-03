@@ -4,13 +4,13 @@ import { finalCtaContent } from "@/content/final-cta";
 
 export function FinalCtaSection() {
   return (
-    <Section className="section-shell-tight section-bg-default pb-14 md:pb-16">
+    <Section className="section-shell-tight section-bg-default pb-24 md:pb-28">
       <div className="cta-band mx-auto max-w-3xl text-center">
-        <h2 className="text-2xl font-bold tracking-tight md:text-4xl">
-          {finalCtaContent.headline}
+        <h2 className="text-2xl font-bold tracking-tight md:text-3xl lg:text-4xl">
+          {finalCtaContent.heading}
         </h2>
         <p className="mt-4 text-base leading-relaxed text-orange-50 md:text-lg">
-          {finalCtaContent.description}
+          {finalCtaContent.body}
         </p>
         <div className="section-cta">
           <PrimaryCtaButton
@@ -20,7 +20,7 @@ export function FinalCtaSection() {
           />
         </div>
         <p className="mt-4 text-xs text-orange-100/80">
-          Free session · Limited seats · Instant confirmation
+          {finalCtaContent.microcopy}
         </p>
       </div>
     </Section>

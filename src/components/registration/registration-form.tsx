@@ -109,7 +109,7 @@ export function RegistrationForm() {
         }
         fullWidth
         disabled={isSubmitting}
-        className="mt-2"
+        className="mt-1"
       />
     </form>
   );

@@ -1,60 +1,35 @@
-import { CheckCircle2 } from "lucide-react";
-
-import { LiveBadge } from "@/components/ui/live-badge";
-import {
-  WebinarMetaGrid,
-  WebinarMetaItem,
-} from "@/components/webinar/webinar-meta";
+import { LiveApplicationTicker } from "@/components/hero/live-application-ticker";
+import { SessionDetailPills } from "@/components/hero/session-detail-pills";
 import { heroContent } from "@/content/hero";
-import { webinarDetails } from "@/content/webinar";
 
 export function HeroSection() {
   return (
     <div className="flex flex-col justify-center">
-      <LiveBadge className="mb-5 w-fit" />
+      <p className="mb-3 inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.18em] text-foreground uppercase">
+        <span
+          className="live-dot size-2 shrink-0 rounded-full bg-red-500"
+          aria-hidden
+        />
+        {heroContent.kicker}
+      </p>
 
-      <p className="section-eyebrow">{heroContent.eyebrow}</p>
-
-      <h1 className="text-foreground text-3xl font-bold tracking-tight text-balance sm:text-4xl lg:text-[2.75rem] lg:leading-[1.12]">
-        {heroContent.headline}{" "}
-        <span className="text-primary">{heroContent.headlineHighlight}</span>{" "}
-        {heroContent.headlineSuffix}
+      <h1 className="text-foreground text-[1.65rem] leading-tight font-bold tracking-tight text-balance sm:text-3xl lg:text-[2.65rem] lg:leading-[1.12]">
+        {heroContent.headlineLine1}{" "}
+        <span className="text-[var(--brand-blue)]">
+          {heroContent.headlineHighlight}
+        </span>
       </h1>
 
-      <p className="text-muted-foreground mt-5 max-w-xl text-base leading-relaxed md:text-lg">
-        {heroContent.subheading}
+      <p className="text-muted-foreground mt-3 max-w-xl text-sm leading-snug sm:text-base sm:leading-relaxed">
+        {heroContent.subheadlineBefore}{" "}
+        <strong className="font-semibold text-foreground">
+          {heroContent.subheadlineBold}
+        </strong>{" "}
+        {heroContent.subheadlineAfter}
       </p>
 
-      <ul className="mt-6 flex flex-wrap gap-2">
-        {heroContent.trustBadges.map((badge) => (
-          <li key={badge} className="benefit-pill">
-            <CheckCircle2 className="trust-check" aria-hidden />
-            {badge}
-          </li>
-        ))}
-      </ul>
-
-      <WebinarMetaGrid className="mt-8">
-        <WebinarMetaItem
-          icon="calendar"
-          label="Date"
-          value={webinarDetails.date}
-        />
-        <WebinarMetaItem
-          icon="clock"
-          label="Time"
-          value={webinarDetails.time}
-        />
-        <WebinarMetaItem
-          icon="duration"
-          label="Duration"
-          value={webinarDetails.duration}
-        />
-      </WebinarMetaGrid>
-
-      <p className="text-muted-foreground mt-5 text-xs">
-        Free · Limited seats · {webinarDetails.duration}
-      </p>
+      <LiveApplicationTicker />
+      <SessionDetailPills />
     </div>
   );
 }
