@@ -2,6 +2,7 @@ import { SectionHeader } from "@/components/section/section-header";
 import { SectionCta } from "@/components/section/section-cta";
 import { Section } from "@/components/section/section";
 import { TestimonialCard } from "@/components/testimonials/testimonial-card";
+import { WrittenReviews } from "@/components/testimonials/written-reviews";
 import { testimonialsContent } from "@/content/testimonials";
 
 export function TestimonialsSection() {
@@ -17,7 +18,9 @@ export function TestimonialsSection() {
         title={testimonialsContent.heading}
       />
 
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <WrittenReviews />
+
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-1 sm:gap-5 sm:px-0">
         {items.map((item) => (
           <TestimonialCard key={item.id} item={item} />
         ))}

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { TestimonialScreenshot } from "@/content/testimonials";
-import { TestimonialMediaFrame } from "./testimonial-media-frame";
+import { cn } from "@/lib/utils";
 
 type TestimonialScreenshotCardProps = {
   screenshot: TestimonialScreenshot;
@@ -12,14 +12,13 @@ export function TestimonialScreenshotCard({
   className,
 }: TestimonialScreenshotCardProps) {
   return (
-    <TestimonialMediaFrame className={className}>
-      <Image
-        src={screenshot.src}
-        alt={screenshot.alt}
-        fill
-        className="object-contain object-top"
-        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-      />
-    </TestimonialMediaFrame>
+    <Image
+      src={screenshot.src}
+      alt={screenshot.alt}
+      width={screenshot.width}
+      height={screenshot.height}
+      className={cn("h-auto w-full rounded-lg", className)}
+      sizes="(max-width: 640px) 100vw, 512px"
+    />
   );
 }
