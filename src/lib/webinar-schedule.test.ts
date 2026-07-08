@@ -25,35 +25,47 @@ function istDate(
 }
 
 describe("getUpcomingWebinarSession", () => {
-  it("shows this Saturday before 12:00 PM IST on Saturday", () => {
-    const session = getUpcomingWebinarSession(istDate(2026, 7, 11, 11, 59));
+  it("shows the series launch date before 18 July 2026 12:00 PM IST", () => {
+    const session = getUpcomingWebinarSession(istDate(2026, 7, 8, 15, 0));
 
-    assert.equal(session.isoDate, "2026-07-11");
+    assert.equal(session.isoDate, "2026-07-18");
     assert.equal(session.time, "12:00 PM IST");
   });
 
-  it("switches to next Saturday at exactly 12:00 PM IST", () => {
-    const session = getUpcomingWebinarSession(istDate(2026, 7, 11, 12, 0));
+  it("shows 18 July on the prior Saturday instead of an earlier week", () => {
+    const session = getUpcomingWebinarSession(istDate(2026, 7, 11, 11, 59));
 
     assert.equal(session.isoDate, "2026-07-18");
   });
 
-  it("shows next Saturday after the current session has started", () => {
-    const session = getUpcomingWebinarSession(istDate(2026, 7, 11, 13, 30));
+  it("shows 18 July before 12:00 PM IST on launch day", () => {
+    const session = getUpcomingWebinarSession(istDate(2026, 7, 18, 11, 59));
 
     assert.equal(session.isoDate, "2026-07-18");
   });
 
-  it("shows the upcoming Saturday on the prior Wednesday", () => {
-    const session = getUpcomingWebinarSession(istDate(2026, 7, 8, 15, 0));
+  it("switches to 25 July at exactly 12:00 PM IST on launch day", () => {
+    const session = getUpcomingWebinarSession(istDate(2026, 7, 18, 12, 0));
 
-    assert.equal(session.isoDate, "2026-07-11");
+    assert.equal(session.isoDate, "2026-07-25");
   });
 
-  it("shows next Saturday on Sunday", () => {
-    const session = getUpcomingWebinarSession(istDate(2026, 7, 12, 10, 0));
+  it("shows next Saturday after the launch session has started", () => {
+    const session = getUpcomingWebinarSession(istDate(2026, 7, 18, 13, 30));
 
-    assert.equal(session.isoDate, "2026-07-18");
+    assert.equal(session.isoDate, "2026-07-25");
+  });
+
+  it("shows 25 July on the Sunday after launch", () => {
+    const session = getUpcomingWebinarSession(istDate(2026, 7, 19, 10, 0));
+
+    assert.equal(session.isoDate, "2026-07-25");
+  });
+
+  it("continues weekly Saturday rollover at exactly 12:00 PM IST", () => {
+    const session = getUpcomingWebinarSession(istDate(2026, 7, 25, 12, 0));
+
+    assert.equal(session.isoDate, "2026-08-01");
   });
 });
 
@@ -64,7 +76,7 @@ describe("generateWebinarIcs", () => {
 
     assert.match(ics, /BEGIN:VCALENDAR/);
     assert.match(ics, /https:\/\/live\.zoho\.in\/bqfz-nvu-trb/);
-    assert.match(ics, /DTSTART;TZID=Asia\/Kolkata:20260711T120000/);
-    assert.match(ics, /DTEND;TZID=Asia\/Kolkata:20260711T130000/);
+    assert.match(ics, /DTSTART;TZID=Asia\/Kolkata:20260718T120000/);
+    assert.match(ics, /DTEND;TZID=Asia\/Kolkata:20260718T130000/);
   });
 });

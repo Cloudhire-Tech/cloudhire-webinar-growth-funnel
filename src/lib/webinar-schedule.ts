@@ -18,6 +18,8 @@ export const WEBINAR_CONFIG = {
   startHour: 12,
   startMinute: 0,
   durationMinutes: 60,
+  /** First webinar in the series (ISO date, interpreted in IST). */
+  seriesStartDate: "2026-07-18",
   joinUrl: "https://live.zoho.in/bqfz-nvu-trb",
   platform: "Zoho Live",
   seatsLabel: "Filling fast",
@@ -65,6 +67,15 @@ function buildSessionStartInTimezone(baseDateInTimezone: Date): Date {
   return fromZonedTime(sessionStartInTimezone, WEBINAR_CONFIG.timezone);
 }
 
+function getSeriesStartSessionStart(): Date {
+  const hourString = String(WEBINAR_CONFIG.startHour).padStart(2, "0");
+  const minuteString = String(WEBINAR_CONFIG.startMinute).padStart(2, "0");
+
+  return new Date(
+    `${WEBINAR_CONFIG.seriesStartDate}T${hourString}:${minuteString}:00+05:30`
+  );
+}
+
 function formatSession(sessionStart: Date): WebinarSession {
   const sessionEnd = addMinutes(sessionStart, WEBINAR_CONFIG.durationMinutes);
   const sessionStartInTimezone = toZonedTime(
@@ -98,6 +109,12 @@ function formatSession(sessionStart: Date): WebinarSession {
 export function getUpcomingWebinarSession(
   referenceDate: Date = new Date()
 ): WebinarSession {
+  const seriesStart = getSeriesStartSessionStart();
+
+  if (referenceDate.getTime() < seriesStart.getTime()) {
+    return formatSession(seriesStart);
+  }
+
   const referenceInTimezone = toZonedTime(
     referenceDate,
     WEBINAR_CONFIG.timezone
