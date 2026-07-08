@@ -3,6 +3,7 @@ import {
   buildRegistrationConfirmationEmailHtml,
   buildRegistrationConfirmationEmailText,
   getRegistrationFirstName,
+  REGISTRATION_CONFIRMATION_EMAIL_SUBJECT,
 } from "@/lib/email/registration-confirmation-html";
 import { getResendConfig, isResendConfigured } from "@/lib/email/resend-client";
 import type { CreateRegistrationResult } from "@/lib/registration/create-registration";
@@ -30,7 +31,7 @@ export async function sendRegistrationConfirmationEmail(
   const emailContext = getWebinarEmailContext(
     new Date(registration.registered_at)
   );
-  const { session, subject } = emailContext;
+  const { session } = emailContext;
 
   if (!isResendConfigured()) {
     console.warn("Registration confirmation email skipped: Resend is not configured", {
@@ -76,7 +77,7 @@ export async function sendRegistrationConfirmationEmail(
     const { data, error } = await resendConfig.client.emails.send({
       from: resendConfig.fromEmail,
       to: registration.email,
-      subject,
+      subject: REGISTRATION_CONFIRMATION_EMAIL_SUBJECT,
       html: buildRegistrationConfirmationEmailHtml(emailContent),
       text: buildRegistrationConfirmationEmailText(emailContent),
       attachments: [

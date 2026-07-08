@@ -1,4 +1,3 @@
-import { siteConfig } from "@/content/site-config";
 import type { WebinarSession } from "@/lib/webinar-schedule";
 
 export type RegistrationConfirmationEmailContent = {
@@ -26,17 +25,26 @@ export function getRegistrationFirstName(fullName: string): string {
   return trimmed.split(/\s+/)[0] ?? "there";
 }
 
+export const REGISTRATION_CONFIRMATION_EMAIL_SUBJECT =
+  "Seat Locked ✅ (Read This Before Saturday)";
+
+export const REGISTRATION_CONFIRMATION_EMAIL_PREVIEW =
+  "Your join link + the one thing to bring.";
+
+function getWebinarTimeForEmail(time: string): string {
+  return time.replace(/\sIST$/, "");
+}
+
 export function buildRegistrationConfirmationEmailHtml(
   content: RegistrationConfirmationEmailContent
 ): string {
   const firstName = escapeHtml(content.firstName);
-  const date = escapeHtml(content.session.date);
-  const time = escapeHtml(content.session.time);
-  const duration = escapeHtml(content.session.duration);
+  const webinarDate = escapeHtml(content.session.date);
+  const webinarTime = escapeHtml(getWebinarTimeForEmail(content.session.time));
   const joinUrl = escapeHtml(content.session.joinUrl);
   const calendarUrl = escapeHtml(content.calendarUrl);
   const logoUrl = escapeHtml(content.logoUrl);
-  const title = escapeHtml(content.session.title);
+  const previewText = escapeHtml(REGISTRATION_CONFIRMATION_EMAIL_PREVIEW);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -46,6 +54,7 @@ export function buildRegistrationConfirmationEmailHtml(
     <title>Webinar registration confirmed</title>
   </head>
   <body style="margin:0;padding:0;background-color:#fafafa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#171717;">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${previewText}</div>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#fafafa;padding:32px 16px;">
       <tr>
         <td align="center">
@@ -57,11 +66,7 @@ export function buildRegistrationConfirmationEmailHtml(
             </tr>
             <tr>
               <td style="padding:0 32px 8px;">
-                <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#171717;">Hi ${firstName},</p>
-                <h1 style="margin:0 0 12px;font-size:24px;line-height:1.3;font-weight:700;color:#0c1527;">Your seat is reserved</h1>
-                <p style="margin:0;font-size:16px;line-height:1.6;color:#525252;">
-                  You're confirmed for the <strong>${title}</strong>. We look forward to seeing you live.
-                </p>
+                <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#171717;">${firstName}, you're in. 🎯</p>
               </td>
             </tr>
             <tr>
@@ -69,10 +74,7 @@ export function buildRegistrationConfirmationEmailHtml(
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#fff7ed;border:1px solid #ffedd5;border-radius:12px;">
                   <tr>
                     <td style="padding:20px;">
-                      <p style="margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ea580c;">Webinar details</p>
-                      <p style="margin:0 0 8px;font-size:15px;line-height:1.5;color:#171717;"><strong>Date:</strong> ${date}</p>
-                      <p style="margin:0 0 8px;font-size:15px;line-height:1.5;color:#171717;"><strong>Time:</strong> ${time}</p>
-                      <p style="margin:0;font-size:15px;line-height:1.5;color:#171717;"><strong>Duration:</strong> ${duration}</p>
+                      <p style="margin:0;font-size:15px;line-height:1.5;color:#171717;">📅 ${webinarDate} · 🕛 ${webinarTime} IST</p>
                     </td>
                   </tr>
                 </table>
@@ -85,14 +87,20 @@ export function buildRegistrationConfirmationEmailHtml(
             </tr>
             <tr>
               <td style="padding:8px 32px 24px;text-align:center;">
-                <a href="${calendarUrl}" style="display:inline-block;background-color:#ffffff;color:#0c1527;text-decoration:none;font-size:15px;font-weight:600;line-height:1;padding:12px 24px;border-radius:12px;border:1px solid #e5e7eb;">Add to Calendar (.ics)</a>
+                <a href="${calendarUrl}" style="display:inline-block;background-color:#ffffff;color:#0c1527;text-decoration:none;font-size:15px;font-weight:600;line-height:1;padding:12px 24px;border-radius:12px;border:1px solid #e5e7eb;">Add to Calendar</a>
               </td>
             </tr>
             <tr>
               <td style="padding:0 32px 24px;">
-                <p style="margin:0;font-size:14px;line-height:1.6;color:#525252;background-color:#fafafa;border-radius:10px;padding:14px 16px;">
-                  Please join 5–10 minutes early so you're settled before we begin.
-                </p>
+                <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#171717;">Do these two things and you'll get 10x more out of it:</p>
+                <p style="margin:0 0 12px;font-size:15px;line-height:1.6;color:#525252;">1. Show up 5 minutes early. The auto-apply setup gets shown in the first 10 minutes — no recap for latecomers.</p>
+                <p style="margin:0;font-size:15px;line-height:1.6;color:#525252;">2. Decide the exact role you want. Bring it. I'll show you live how the system hunts down 100+ of them a week and applies while you sleep.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 32px 24px;">
+                <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#171717;">Reminders coming so you don't miss it. This is the one that fixes the grind.</p>
+                <p style="margin:0;font-size:16px;line-height:1.6;color:#171717;">— Sejal</p>
               </td>
             </tr>
             <tr>
@@ -100,10 +108,6 @@ export function buildRegistrationConfirmationEmailHtml(
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-top:1px solid #f3f4f6;">
                   <tr>
                     <td style="padding-top:20px;">
-                      <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#525252;">
-                        Need help? Reply to this email or visit
-                        <a href="${escapeHtml(siteConfig.url)}" style="color:#ea580c;text-decoration:none;font-weight:600;">${escapeHtml(siteConfig.url.replace(/^https?:\/\//, ""))}</a>.
-                      </p>
                       <p style="margin:0;font-size:12px;line-height:1.5;color:#a3a3a3;">
                         © ${new Date().getFullYear()} CloudHire. All rights reserved.
                       </p>
@@ -123,23 +127,27 @@ export function buildRegistrationConfirmationEmailHtml(
 export function buildRegistrationConfirmationEmailText(
   content: RegistrationConfirmationEmailContent
 ): string {
+  const webinarTime = getWebinarTimeForEmail(content.session.time);
+
   return [
-    `Hi ${content.firstName},`,
+    `${content.firstName}, you're in. 🎯`,
     "",
-    "Your seat is reserved.",
+    `📅 ${content.session.date} · 🕛 ${webinarTime} IST`,
     "",
-    `You're confirmed for the ${content.session.title}.`,
+    "Join Webinar",
+    content.session.joinUrl,
     "",
-    "Webinar details",
-    `Date: ${content.session.date}`,
-    `Time: ${content.session.time}`,
-    `Duration: ${content.session.duration}`,
+    "Add to Calendar",
+    content.calendarUrl,
     "",
-    `Join webinar: ${content.session.joinUrl}`,
-    `Add to calendar: ${content.calendarUrl}`,
+    "Do these two things and you'll get 10x more out of it:",
     "",
-    "Please join 5–10 minutes early so you're settled before we begin.",
+    "1. Show up 5 minutes early. The auto-apply setup gets shown in the first 10 minutes — no recap for latecomers.",
     "",
-    `Need help? Visit ${siteConfig.url}`,
+    "2. Decide the exact role you want. Bring it. I'll show you live how the system hunts down 100+ of them a week and applies while you sleep.",
+    "",
+    "Reminders coming so you don't miss it. This is the one that fixes the grind.",
+    "",
+    "— Sejal",
   ].join("\n");
 }

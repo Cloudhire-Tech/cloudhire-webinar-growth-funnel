@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { siteConfig } from "@/content/site-config";
 import { fontVariables } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ export default function RootLayout({
           "min-h-svh bg-white font-sans text-neutral-900 antialiased"
         )}
       >
+        <GoogleAnalytics />
         {children}
       </body>
     </html>
