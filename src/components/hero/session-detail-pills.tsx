@@ -1,22 +1,28 @@
 import { heroContent } from "@/content/hero";
-import { webinarDetails } from "@/content/webinar";
+import { getWebinarDetails } from "@/content/webinar";
 import { cn } from "@/lib/utils";
 
-export function SessionDetailPills() {
+type SessionDetailPillsProps = {
+  webinar?: ReturnType<typeof getWebinarDetails>;
+};
+
+export function SessionDetailPills({
+  webinar = getWebinarDetails(),
+}: SessionDetailPillsProps) {
   const pills = [
     {
       label: heroContent.sessionPills.dateLabel,
-      value: webinarDetails.date,
+      value: webinar.date,
       urgent: false,
     },
     {
       label: heroContent.sessionPills.timeLabel,
-      value: webinarDetails.time,
+      value: webinar.time,
       urgent: false,
     },
     {
       label: heroContent.sessionPills.seatsLabel,
-      value: webinarDetails.seatsLabel,
+      value: webinar.seatsLabel,
       urgent: true,
     },
   ] as const;

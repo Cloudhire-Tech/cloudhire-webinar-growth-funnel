@@ -1,8 +1,10 @@
 import { PrimaryCtaButton } from "@/components/ui/primary-cta-button";
 import { Section } from "@/components/section/section";
-import { finalCtaContent } from "@/content/final-cta";
+import { getFinalCtaContent } from "@/content/webinar";
 
 export function FinalCtaSection() {
+  const finalCtaContent = getFinalCtaContent();
+
   return (
     <Section className="section-shell-tight section-bg-default pb-24 md:pb-28">
       <div className="cta-band mx-auto max-w-3xl text-center">

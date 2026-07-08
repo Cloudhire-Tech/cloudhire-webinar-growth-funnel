@@ -1,5 +1,6 @@
 import { CheckCircle2, ListChecks } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { PageShell } from "@/components/layout/page-shell";
 import {
@@ -7,7 +8,7 @@ import {
   WebinarMetaItem,
 } from "@/components/webinar/webinar-meta";
 import { thankYouContent } from "@/content/thank-you";
-import { webinarDetails } from "@/content/webinar";
+import { getWebinarDetails } from "@/content/webinar";
 
 export const metadata: Metadata = {
   title: "Thank You",
@@ -15,6 +16,8 @@ export const metadata: Metadata = {
 };
 
 export default function ThankYouPage() {
+  const webinarDetails = getWebinarDetails();
+
   return (
     <PageShell showHeaderCta={false} shellVariant="light">
       <main className="container-shell flex flex-1 flex-col items-center justify-center py-16 md:py-24">
@@ -61,6 +64,23 @@ export default function ThankYouPage() {
                 value={webinarDetails.platform}
               />
             </WebinarMetaGrid>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href={webinarDetails.joinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-primary inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+            >
+              Open webinar link
+            </Link>
+            <Link
+              href="/api/webinar/calendar"
+              className="border-border text-foreground inline-flex h-11 items-center justify-center rounded-xl border bg-white px-5 text-sm font-semibold transition-colors hover:bg-stone-50"
+            >
+              Add to calendar (.ics)
+            </Link>
           </div>
 
           <div className="premium-card mt-10 p-6 text-left md:p-8">

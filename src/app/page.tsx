@@ -10,8 +10,11 @@ import { RegistrationSection } from "@/sections/registration-section";
 import { SpeakerSection } from "@/sections/speaker-section";
 import { TakeawaysSection } from "@/sections/takeaways-section";
 import { TestimonialsSection } from "@/sections/testimonials-section";
+import { getStickyCtaContent } from "@/content/webinar";
 
 export default function LandingPage() {
+  const stickyCtaContent = getStickyCtaContent();
+
   return (
     <PageShell showHeaderCta={false}>
       <section className="hero-band">
@@ -28,7 +31,7 @@ export default function LandingPage() {
       <TestimonialsSection />
       <FaqSection />
       <FinalCtaSection />
-      <StickyBottomCta />
+      <StickyBottomCta {...stickyCtaContent} />
     </PageShell>
   );
 }

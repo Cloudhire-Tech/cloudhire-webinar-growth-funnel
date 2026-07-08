@@ -3,10 +3,19 @@
 import { useEffect, useState } from "react";
 
 import { PrimaryCtaButton } from "@/components/ui/primary-cta-button";
-import { stickyCtaContent } from "@/content/sticky-cta";
 import { cn } from "@/lib/utils";
 
-export function StickyBottomCta() {
+type StickyBottomCtaProps = {
+  line1: string;
+  line2: string;
+  button: string;
+};
+
+export function StickyBottomCta({
+  line1,
+  line2,
+  button,
+}: StickyBottomCtaProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -35,15 +44,15 @@ export function StickyBottomCta() {
       <div className="container-shell flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="font-mono text-[10px] font-medium tracking-[0.1em] text-white/60 uppercase sm:text-[11px]">
-            {stickyCtaContent.line1}
+            {line1}
           </p>
           <p className="truncate text-sm font-bold text-white sm:text-base">
-            {stickyCtaContent.line2}
+            {line2}
           </p>
         </div>
         <PrimaryCtaButton
           href="#register"
-          label={stickyCtaContent.button}
+          label={button}
           className="h-10 shrink-0 px-4 text-xs sm:h-11 sm:px-5 sm:text-sm"
         />
       </div>

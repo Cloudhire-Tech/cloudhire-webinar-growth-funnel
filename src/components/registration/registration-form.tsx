@@ -1,11 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import {
-  PrimaryCtaButton,
-} from "@/components/ui/primary-cta-button";
+import { PrimaryCtaButton } from "@/components/ui/primary-cta-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registrationContent } from "@/content/registration";
@@ -19,6 +18,8 @@ const inputClassName =
   "h-10 focus-visible:border-orange-500 focus-visible:ring-orange-500/30";
 
 export function RegistrationForm() {
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -33,9 +34,33 @@ export function RegistrationForm() {
   });
 
   const onSubmit = async (data: RegistrationFormValues) => {
-    void data;
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    window.location.assign("/thank-you");
+    setSubmitError(null);
+
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const payload = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        setSubmitError(
+          payload.error ??
+            "We couldn't complete your registration. Please try again."
+        );
+        return;
+      }
+
+      window.location.assign("/thank-you");
+    } catch {
+      setSubmitError(
+        "We couldn't reach the registration service. Please check your connection and try again."
+      );
+    }
   };
 
   return (
@@ -55,6 +80,7 @@ export function RegistrationForm() {
           placeholder={registrationContent.fields.fullName.placeholder}
           aria-invalid={Boolean(errors.fullName)}
           className={cn(inputClassName, errors.fullName && "border-destructive")}
+          disabled={isSubmitting}
           {...register("fullName")}
         />
         {errors.fullName ? (
@@ -73,6 +99,7 @@ export function RegistrationForm() {
           placeholder={registrationContent.fields.email.placeholder}
           aria-invalid={Boolean(errors.email)}
           className={cn(inputClassName, errors.email && "border-destructive")}
+          disabled={isSubmitting}
           {...register("email")}
         />
         {errors.email ? (
@@ -91,6 +118,7 @@ export function RegistrationForm() {
           placeholder={registrationContent.fields.mobile.placeholder}
           aria-invalid={Boolean(errors.mobile)}
           className={cn(inputClassName, errors.mobile && "border-destructive")}
+          disabled={isSubmitting}
           {...register("mobile")}
         />
         {errors.mobile ? (
@@ -99,6 +127,12 @@ export function RegistrationForm() {
           </p>
         ) : null}
       </div>
+
+      {submitError ? (
+        <p className="text-destructive text-sm" role="alert">
+          {submitError}
+        </p>
+      ) : null}
 
       <PrimaryCtaButton
         type="submit"

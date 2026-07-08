@@ -1,0 +1,165 @@
+import {
+  addDays,
+  addMinutes,
+  addWeeks,
+  format,
+  setHours,
+  setMilliseconds,
+  setMinutes,
+  setSeconds,
+  startOfDay,
+} from "date-fns";
+import { fromZonedTime, toZonedTime } from "date-fns-tz";
+
+export const WEBINAR_CONFIG = {
+  timezone: "Asia/Kolkata",
+  timezoneLabel: "IST",
+  dayOfWeek: 6,
+  startHour: 12,
+  startMinute: 0,
+  durationMinutes: 60,
+  joinUrl: "https://live.zoho.in/bqfz-nvu-trb",
+  platform: "Zoho Live",
+  seatsLabel: "Filling fast",
+  title: "CloudHire Weekly Webinar",
+  description:
+    "Live masterclass on putting your job applications on autopilot.",
+} as const;
+
+export type WebinarSession = {
+  startAt: Date;
+  endAt: Date;
+  isoDate: string;
+  date: string;
+  dateShort: string;
+  dateSticky: string;
+  time: string;
+  timeSticky: string;
+  duration: string;
+  durationShort: string;
+  durationMinutes: number;
+  joinUrl: string;
+  platform: string;
+  timezone: string;
+  title: string;
+  description: string;
+};
+
+function buildSessionStartInTimezone(baseDateInTimezone: Date): Date {
+  const saturdayDate = startOfDay(baseDateInTimezone);
+  const daysUntilSaturday =
+    (WEBINAR_CONFIG.dayOfWeek - saturdayDate.getDay() + 7) % 7;
+  const sessionDay = addDays(saturdayDate, daysUntilSaturday);
+
+  const sessionStartInTimezone = setMilliseconds(
+    setSeconds(
+      setMinutes(
+        setHours(sessionDay, WEBINAR_CONFIG.startHour),
+        WEBINAR_CONFIG.startMinute
+      ),
+      0
+    ),
+    0
+  );
+
+  return fromZonedTime(sessionStartInTimezone, WEBINAR_CONFIG.timezone);
+}
+
+function formatSession(sessionStart: Date): WebinarSession {
+  const sessionEnd = addMinutes(sessionStart, WEBINAR_CONFIG.durationMinutes);
+  const sessionStartInTimezone = toZonedTime(
+    sessionStart,
+    WEBINAR_CONFIG.timezone
+  );
+
+  const date = format(sessionStartInTimezone, "EEE, d MMMM");
+  const dateSticky = format(sessionStartInTimezone, "EEE d MMMM").toUpperCase();
+
+  return {
+    startAt: sessionStart,
+    endAt: sessionEnd,
+    isoDate: format(sessionStartInTimezone, "yyyy-MM-dd"),
+    date,
+    dateShort: date,
+    dateSticky,
+    time: `12:00 PM ${WEBINAR_CONFIG.timezoneLabel}`,
+    timeSticky: `12 PM ${WEBINAR_CONFIG.timezoneLabel}`,
+    duration: `${WEBINAR_CONFIG.durationMinutes} minutes`,
+    durationShort: `${WEBINAR_CONFIG.durationMinutes} min`,
+    durationMinutes: WEBINAR_CONFIG.durationMinutes,
+    joinUrl: WEBINAR_CONFIG.joinUrl,
+    platform: WEBINAR_CONFIG.platform,
+    timezone: WEBINAR_CONFIG.timezoneLabel,
+    title: WEBINAR_CONFIG.title,
+    description: WEBINAR_CONFIG.description,
+  };
+}
+
+export function getUpcomingWebinarSession(
+  referenceDate: Date = new Date()
+): WebinarSession {
+  const referenceInTimezone = toZonedTime(
+    referenceDate,
+    WEBINAR_CONFIG.timezone
+  );
+  let sessionStart = buildSessionStartInTimezone(referenceInTimezone);
+
+  if (referenceDate.getTime() >= sessionStart.getTime()) {
+    sessionStart = addWeeks(sessionStart, 1);
+  }
+
+  return formatSession(sessionStart);
+}
+
+function formatIcsTimestamp(date: Date): string {
+  return format(toZonedTime(date, WEBINAR_CONFIG.timezone), "yyyyMMdd'T'HHmmss");
+}
+
+function formatIcsUtcTimestamp(date: Date): string {
+  return format(date, "yyyyMMdd'T'HHmmss'Z'");
+}
+
+function escapeIcsText(value: string): string {
+  return value
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
+}
+
+export function generateWebinarIcs(session: WebinarSession): string {
+  const now = new Date();
+
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//CloudHire//Webinar//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    `UID:webinar-${session.isoDate}@cloudhire.ai`,
+    `DTSTAMP:${formatIcsUtcTimestamp(now)}`,
+    `DTSTART;TZID=${WEBINAR_CONFIG.timezone}:${formatIcsTimestamp(session.startAt)}`,
+    `DTEND;TZID=${WEBINAR_CONFIG.timezone}:${formatIcsTimestamp(session.endAt)}`,
+    `SUMMARY:${escapeIcsText(session.title)}`,
+    `DESCRIPTION:${escapeIcsText(session.description)}`,
+    `URL:${session.joinUrl}`,
+    `LOCATION:${escapeIcsText(session.joinUrl)}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+}
+
+export function getWebinarEmailContext(referenceDate: Date = new Date()) {
+  const session = getUpcomingWebinarSession(referenceDate);
+
+  return {
+    session,
+    subject: `You're registered for ${session.title}`,
+    joinUrl: session.joinUrl,
+    date: session.date,
+    time: session.time,
+    duration: session.duration,
+    platform: session.platform,
+  };
+}
