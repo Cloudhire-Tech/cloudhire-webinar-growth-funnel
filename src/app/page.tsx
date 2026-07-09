@@ -1,16 +1,58 @@
-import { TrustedBySection } from "@/sections/trusted-by-section";
+import dynamic from "next/dynamic";
+
 import { PageShell } from "@/components/layout/page-shell";
-import { StickyBottomCta } from "@/components/layout/sticky-bottom-cta";
-import { AgendaSection } from "@/sections/agenda-section";
-import { FaqSection } from "@/sections/faq-section";
-import { FinalCtaSection } from "@/sections/final-cta-section";
+import { StickyBottomCtaDynamic } from "@/components/layout/sticky-bottom-cta-dynamic";
 import { HeroSection } from "@/sections/hero-section";
-import { PainSection } from "@/sections/pain-section";
 import { RegistrationSection } from "@/sections/registration-section";
-import { SpeakerSection } from "@/sections/speaker-section";
-import { TakeawaysSection } from "@/sections/takeaways-section";
-import { TestimonialsSection } from "@/sections/testimonials-section";
 import { getStickyCtaContent } from "@/content/webinar";
+
+const TrustedBySection = dynamic(() =>
+  import("@/sections/trusted-by-section").then((module) => ({
+    default: module.TrustedBySection,
+  }))
+);
+
+const PainSection = dynamic(() =>
+  import("@/sections/pain-section").then((module) => ({
+    default: module.PainSection,
+  }))
+);
+
+const AgendaSection = dynamic(() =>
+  import("@/sections/agenda-section").then((module) => ({
+    default: module.AgendaSection,
+  }))
+);
+
+const TakeawaysSection = dynamic(() =>
+  import("@/sections/takeaways-section").then((module) => ({
+    default: module.TakeawaysSection,
+  }))
+);
+
+const SpeakerSection = dynamic(() =>
+  import("@/sections/speaker-section").then((module) => ({
+    default: module.SpeakerSection,
+  }))
+);
+
+const TestimonialsSection = dynamic(() =>
+  import("@/sections/testimonials-section").then((module) => ({
+    default: module.TestimonialsSection,
+  }))
+);
+
+const FaqSection = dynamic(() =>
+  import("@/sections/faq-section").then((module) => ({
+    default: module.FaqSection,
+  }))
+);
+
+const FinalCtaSection = dynamic(() =>
+  import("@/sections/final-cta-section").then((module) => ({
+    default: module.FinalCtaSection,
+  }))
+);
 
 export default function LandingPage() {
   const stickyCtaContent = getStickyCtaContent();
@@ -31,7 +73,7 @@ export default function LandingPage() {
       <TestimonialsSection />
       <FaqSection />
       <FinalCtaSection />
-      <StickyBottomCta {...stickyCtaContent} />
+      <StickyBottomCtaDynamic {...stickyCtaContent} />
     </PageShell>
   );
 }
