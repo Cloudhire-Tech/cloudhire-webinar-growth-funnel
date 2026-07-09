@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { MetaPixel } from "@/components/analytics/meta-pixel";
 import { MicrosoftClarity } from "@/components/analytics/microsoft-clarity";
 import { siteConfig } from "@/content/site-config";
 import { fontVariables } from "@/lib/fonts";
@@ -32,6 +33,7 @@ export default function RootLayout({
       >
         <GoogleAnalytics />
         <MicrosoftClarity />
+        <MetaPixel />
         {children}
       </body>
     </html>

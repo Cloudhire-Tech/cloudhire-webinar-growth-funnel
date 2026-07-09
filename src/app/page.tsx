@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 
+import { MetaPixelViewContent } from "@/components/analytics/meta-pixel-view-content";
 import { PageShell } from "@/components/layout/page-shell";
 import { StickyBottomCtaDynamic } from "@/components/layout/sticky-bottom-cta-dynamic";
 import { HeroSection } from "@/sections/hero-section";
@@ -59,6 +60,7 @@ export default function LandingPage() {
 
   return (
     <PageShell showHeaderCta={false}>
+      <MetaPixelViewContent />
       <section className="hero-band">
         <div className="container-shell grid items-start gap-6 py-7 sm:py-9 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-12 lg:py-14">
           <HeroSection />

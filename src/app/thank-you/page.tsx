@@ -2,6 +2,7 @@ import { CheckCircle2, ListChecks } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { MetaPixelLead } from "@/components/analytics/meta-pixel-lead";
 import { PageShell } from "@/components/layout/page-shell";
 import {
   WebinarMetaGrid,
@@ -20,6 +21,7 @@ export default function ThankYouPage() {
 
   return (
     <PageShell showHeaderCta={false} shellVariant="light">
+      <MetaPixelLead />
       <main className="container-shell flex flex-1 flex-col items-center justify-center py-16 md:py-24">
         <div className="w-full max-w-lg text-center">
           <div className="bg-orange-50 text-primary mx-auto mb-8 flex size-20 items-center justify-center rounded-full ring-4 ring-orange-100">
