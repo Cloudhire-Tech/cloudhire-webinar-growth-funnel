@@ -7,6 +7,8 @@ import {
 } from "@/lib/email/registration-confirmation-html";
 import { getResendConfig, isResendConfigured } from "@/lib/email/resend-client";
 import type { CreateRegistrationResult } from "@/lib/registration/create-registration";
+import { syncRegistrationToZohoWebinar } from "@/lib/registration/register-zoho-attendee";
+import { getThankYouJoinUrl } from "@/lib/registration/thank-you-join-url";
 import {
   generateWebinarIcs,
   getWebinarEmailContext,
@@ -61,14 +63,17 @@ export async function sendRegistrationConfirmationEmail(
     };
   }
 
+  const joinUrl = await getThankYouJoinUrl(registration.id);
+  const sessionForEmail = { ...session, joinUrl };
+
   const appUrl = siteConfig.url.replace(/\/$/, "");
-  const calendarUrl = `${appUrl}/api/webinar/calendar`;
+  const calendarUrl = `${appUrl}/api/webinar/calendar?registration=${encodeURIComponent(registration.id)}`;
   const logoUrl = `${appUrl}/images/cloudhire-logo.png`;
-  const icsContent = generateWebinarIcs(session);
+  const icsContent = generateWebinarIcs(sessionForEmail);
 
   const emailContent = {
     firstName: getRegistrationFirstName(registration.full_name),
-    session,
+    session: sessionForEmail,
     calendarUrl,
     logoUrl,
   };
@@ -134,6 +139,16 @@ export async function sendRegistrationConfirmationEmail(
 export async function handleRegistrationSideEffects(
   result: CreateRegistrationResult
 ) {
+  try {
+    await syncRegistrationToZohoWebinar(result.registration);
+  } catch (error) {
+    console.error("Zoho Webinar side effect failed after successful save", {
+      registrationId: result.registration.id,
+      email: result.registration.email,
+      error,
+    });
+  }
+
   try {
     await sendRegistrationConfirmationEmail(result.registration);
   } catch (error) {

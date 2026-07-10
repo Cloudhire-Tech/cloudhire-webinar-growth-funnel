@@ -19,6 +19,10 @@ export type Database = {
           source?: string;
           created_at?: string;
           updated_at?: string;
+          zoho_webinar_id?: string | null;
+          zoho_attendee_id?: string | null;
+          zoho_join_url?: string | null;
+          zoho_registration_status?: string;
         };
         Update: Partial<{
           full_name: string;
@@ -29,6 +33,10 @@ export type Database = {
           webinar_join_url: string;
           registered_at: string;
           source: string;
+          zoho_webinar_id: string | null;
+          zoho_attendee_id: string | null;
+          zoho_join_url: string | null;
+          zoho_registration_status: string;
         }>;
         Relationships: [];
       };

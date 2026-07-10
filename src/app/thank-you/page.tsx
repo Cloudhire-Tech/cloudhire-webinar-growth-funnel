@@ -10,14 +10,21 @@ import {
 } from "@/components/webinar/webinar-meta";
 import { thankYouContent } from "@/content/thank-you";
 import { getWebinarDetails } from "@/content/webinar";
+import { getThankYouJoinUrl } from "@/lib/registration/thank-you-join-url";
 
 export const metadata: Metadata = {
   title: "Thank You",
   description: "Your webinar registration is confirmed.",
 };
 
-export default function ThankYouPage() {
+type ThankYouPageProps = {
+  searchParams: Promise<{ registration?: string }>;
+};
+
+export default async function ThankYouPage({ searchParams }: ThankYouPageProps) {
+  const { registration } = await searchParams;
   const webinarDetails = getWebinarDetails();
+  const joinUrl = await getThankYouJoinUrl(registration);
 
   return (
     <PageShell showHeaderCta={false} shellVariant="light">
@@ -70,7 +77,7 @@ export default function ThankYouPage() {
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
-              href={webinarDetails.joinUrl}
+              href={joinUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-primary inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
@@ -78,7 +85,11 @@ export default function ThankYouPage() {
               Open webinar link
             </Link>
             <Link
-              href="/api/webinar/calendar"
+              href={
+                registration
+                  ? `/api/webinar/calendar?registration=${encodeURIComponent(registration)}`
+                  : "/api/webinar/calendar"
+              }
               className="border-border text-foreground inline-flex h-11 items-center justify-center rounded-xl border bg-white px-5 text-sm font-semibold transition-colors hover:bg-stone-50"
             >
               Add to calendar (.ics)

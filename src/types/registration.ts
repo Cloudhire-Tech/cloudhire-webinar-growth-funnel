@@ -10,6 +10,10 @@ export type WebinarRegistrationRecord = {
   source: string;
   created_at: string;
   updated_at: string;
+  zoho_webinar_id: string | null;
+  zoho_attendee_id: string | null;
+  zoho_join_url: string | null;
+  zoho_registration_status: string;
 };
 
 export type CreateWebinarRegistrationInput = {

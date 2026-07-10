@@ -10,7 +10,8 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:schedule": "tsx --test src/lib/webinar-schedule.test.ts"
+    "test:schedule": "tsx --test src/lib/webinar-schedule.test.ts",
+    "test:zoho": "tsx --test src/lib/zoho/*.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",

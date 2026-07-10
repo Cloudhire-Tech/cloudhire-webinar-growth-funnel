@@ -46,7 +46,10 @@ export function RegistrationForm() {
         body: JSON.stringify(data),
       });
 
-      const payload = (await response.json()) as { error?: string };
+      const payload = (await response.json()) as {
+        error?: string;
+        registrationId?: string;
+      };
 
       if (!response.ok) {
         setSubmitError(
@@ -57,7 +60,10 @@ export function RegistrationForm() {
       }
 
       setMetaPixelLeadPending();
-      window.location.assign("/thank-you");
+      const thankYouUrl = payload.registrationId
+        ? `/thank-you?registration=${encodeURIComponent(payload.registrationId)}`
+        : "/thank-you";
+      window.location.assign(thankYouUrl);
     } catch {
       setSubmitError(
         "We couldn't reach the registration service. Please check your connection and try again."
