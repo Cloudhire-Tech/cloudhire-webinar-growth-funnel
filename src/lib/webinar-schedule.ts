@@ -18,7 +18,7 @@ export const WEBINAR_CONFIG = {
   startHour: 12,
   startMinute: 0,
   durationMinutes: 60,
-  /** First webinar in the series (ISO date, interpreted in IST). */
+  /** First recurring Saturday webinar in the series (ISO date, interpreted in IST). */
   seriesStartDate: "2026-07-18",
   joinUrl: "https://live.zoho.in/bqfz-nvu-trb",
   platform: "Zoho Live",
@@ -26,6 +26,13 @@ export const WEBINAR_CONFIG = {
   title: "CloudHire Weekly Webinar",
   description:
     "Live masterclass on putting your job applications on autopilot.",
+} as const;
+
+/** One-time override shown until this session starts, then recurring Saturdays resume. */
+export const SPECIAL_WEBINAR_OVERRIDE = {
+  isoDate: "2026-07-15",
+  startHour: 20,
+  startMinute: 0,
 } as const;
 
 export type WebinarSession = {
@@ -76,6 +83,18 @@ function getSeriesStartSessionStart(): Date {
   );
 }
 
+function getSpecialSessionStart(): Date {
+  const hourString = String(SPECIAL_WEBINAR_OVERRIDE.startHour).padStart(2, "0");
+  const minuteString = String(SPECIAL_WEBINAR_OVERRIDE.startMinute).padStart(
+    2,
+    "0"
+  );
+
+  return new Date(
+    `${SPECIAL_WEBINAR_OVERRIDE.isoDate}T${hourString}:${minuteString}:00+05:30`
+  );
+}
+
 function formatSession(sessionStart: Date): WebinarSession {
   const sessionEnd = addMinutes(sessionStart, WEBINAR_CONFIG.durationMinutes);
   const sessionStartInTimezone = toZonedTime(
@@ -85,6 +104,8 @@ function formatSession(sessionStart: Date): WebinarSession {
 
   const date = format(sessionStartInTimezone, "EEE, d MMMM");
   const dateSticky = format(sessionStartInTimezone, "EEE d MMMM").toUpperCase();
+  const time = `${format(sessionStartInTimezone, "h:mm a")} ${WEBINAR_CONFIG.timezoneLabel}`;
+  const timeSticky = `${format(sessionStartInTimezone, "h a").toUpperCase()} ${WEBINAR_CONFIG.timezoneLabel}`;
 
   return {
     startAt: sessionStart,
@@ -93,8 +114,8 @@ function formatSession(sessionStart: Date): WebinarSession {
     date,
     dateShort: date,
     dateSticky,
-    time: `12:00 PM ${WEBINAR_CONFIG.timezoneLabel}`,
-    timeSticky: `12 PM ${WEBINAR_CONFIG.timezoneLabel}`,
+    time,
+    timeSticky,
     duration: `${WEBINAR_CONFIG.durationMinutes} minutes`,
     durationShort: `${WEBINAR_CONFIG.durationMinutes} min`,
     durationMinutes: WEBINAR_CONFIG.durationMinutes,
@@ -106,9 +127,7 @@ function formatSession(sessionStart: Date): WebinarSession {
   };
 }
 
-export function getUpcomingWebinarSession(
-  referenceDate: Date = new Date()
-): WebinarSession {
+function getRecurringSaturdaySession(referenceDate: Date): WebinarSession {
   const seriesStart = getSeriesStartSessionStart();
 
   if (referenceDate.getTime() < seriesStart.getTime()) {
@@ -126,6 +145,18 @@ export function getUpcomingWebinarSession(
   }
 
   return formatSession(sessionStart);
+}
+
+export function getUpcomingWebinarSession(
+  referenceDate: Date = new Date()
+): WebinarSession {
+  const specialSessionStart = getSpecialSessionStart();
+
+  if (referenceDate.getTime() < specialSessionStart.getTime()) {
+    return formatSession(specialSessionStart);
+  }
+
+  return getRecurringSaturdaySession(referenceDate);
 }
 
 function formatIcsTimestamp(date: Date): string {
