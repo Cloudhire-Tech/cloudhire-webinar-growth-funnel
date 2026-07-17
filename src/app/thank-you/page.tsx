@@ -150,6 +150,23 @@ export default async function ThankYouPage({ searchParams }: ThankYouPageProps) 
             </div>
           ) : null}
 
+          <div className="premium-card mt-8 p-6 text-left md:p-8">
+            <h2 className="text-foreground text-lg font-semibold tracking-tight">
+              {thankYouContent.telegram.title}
+            </h2>
+            <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+              {thankYouContent.telegram.description}
+            </p>
+            <Link
+              href={thankYouContent.telegram.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-primary mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl px-5 text-sm font-semibold text-white transition-colors hover:bg-orange-600 sm:w-auto"
+            >
+              {thankYouContent.telegram.buttonLabel}
+            </Link>
+          </div>
+
           <div className="premium-card mt-10 p-6 text-left md:p-8">
             <div className="mb-4 flex items-center gap-2">
               <ListChecks className="text-primary size-5" aria-hidden />

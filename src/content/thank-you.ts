@@ -12,4 +12,11 @@ export const thankYouContent = {
     "Join the webinar on time.",
   ] as const,
   detailsTitle: "Webinar Details",
+  telegram: {
+    title: "Join Our Telegram Community",
+    description:
+      "Join our Telegram community to receive webinar reminders, important announcements, exclusive resources, and post-webinar updates.",
+    buttonLabel: "Join Telegram Community",
+    url: "https://web.telegram.org/a/#-1003786932851",
+  },
 } as const;
