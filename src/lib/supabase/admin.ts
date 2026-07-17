@@ -23,6 +23,13 @@ export type Database = {
           zoho_attendee_id?: string | null;
           zoho_join_url?: string | null;
           zoho_registration_status?: string;
+          payment_status?: string;
+          payment_amount?: number | null;
+          payment_currency?: string | null;
+          payment_provider?: string | null;
+          payment_order_id?: string | null;
+          payment_reference?: string | null;
+          payment_completed_at?: string | null;
         };
         Update: Partial<{
           full_name: string;
@@ -37,6 +44,13 @@ export type Database = {
           zoho_attendee_id: string | null;
           zoho_join_url: string | null;
           zoho_registration_status: string;
+          payment_status: string;
+          payment_amount: number | null;
+          payment_currency: string | null;
+          payment_provider: string | null;
+          payment_order_id: string | null;
+          payment_reference: string | null;
+          payment_completed_at: string | null;
         }>;
         Relationships: [];
       };

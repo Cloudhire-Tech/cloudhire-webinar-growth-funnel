@@ -18,21 +18,14 @@ export const WEBINAR_CONFIG = {
   startHour: 12,
   startMinute: 0,
   durationMinutes: 60,
-  /** First recurring Saturday webinar in the series (ISO date, interpreted in IST). */
-  seriesStartDate: "2026-07-18",
+  /** First Saturday webinar in the series (ISO date, interpreted in IST). */
+  seriesStartDate: "2026-07-25",
   joinUrl: "https://live.zoho.in/bqfz-nvu-trb",
   platform: "Zoho Live",
   seatsLabel: "Filling fast",
   title: "CloudHire Weekly Webinar",
   description:
     "Live masterclass on putting your job applications on autopilot.",
-} as const;
-
-/** One-time override shown until this session starts, then recurring Saturdays resume. */
-export const SPECIAL_WEBINAR_OVERRIDE = {
-  isoDate: "2026-07-15",
-  startHour: 20,
-  startMinute: 0,
 } as const;
 
 export type WebinarSession = {
@@ -83,18 +76,6 @@ function getSeriesStartSessionStart(): Date {
   );
 }
 
-function getSpecialSessionStart(): Date {
-  const hourString = String(SPECIAL_WEBINAR_OVERRIDE.startHour).padStart(2, "0");
-  const minuteString = String(SPECIAL_WEBINAR_OVERRIDE.startMinute).padStart(
-    2,
-    "0"
-  );
-
-  return new Date(
-    `${SPECIAL_WEBINAR_OVERRIDE.isoDate}T${hourString}:${minuteString}:00+05:30`
-  );
-}
-
 function formatSession(sessionStart: Date): WebinarSession {
   const sessionEnd = addMinutes(sessionStart, WEBINAR_CONFIG.durationMinutes);
   const sessionStartInTimezone = toZonedTime(
@@ -127,7 +108,9 @@ function formatSession(sessionStart: Date): WebinarSession {
   };
 }
 
-function getRecurringSaturdaySession(referenceDate: Date): WebinarSession {
+export function getUpcomingWebinarSession(
+  referenceDate: Date = new Date()
+): WebinarSession {
   const seriesStart = getSeriesStartSessionStart();
 
   if (referenceDate.getTime() < seriesStart.getTime()) {
@@ -145,18 +128,6 @@ function getRecurringSaturdaySession(referenceDate: Date): WebinarSession {
   }
 
   return formatSession(sessionStart);
-}
-
-export function getUpcomingWebinarSession(
-  referenceDate: Date = new Date()
-): WebinarSession {
-  const specialSessionStart = getSpecialSessionStart();
-
-  if (referenceDate.getTime() < specialSessionStart.getTime()) {
-    return formatSession(specialSessionStart);
-  }
-
-  return getRecurringSaturdaySession(referenceDate);
 }
 
 function formatIcsTimestamp(date: Date): string {

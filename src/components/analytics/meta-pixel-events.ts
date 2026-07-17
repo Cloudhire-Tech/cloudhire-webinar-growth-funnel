@@ -1,4 +1,5 @@
 export const META_PIXEL_LEAD_PENDING_KEY = "meta-pixel-lead-pending";
+export const META_PIXEL_PURCHASE_PENDING_KEY = "meta-pixel-purchase-pending";
 
 type FbqFunction = (
   command: "track",
@@ -13,11 +14,23 @@ declare global {
 }
 
 export function trackMetaPixelEvent(eventName: string): boolean {
+  return trackMetaPixelEventWithParams(eventName);
+}
+
+export function trackMetaPixelEventWithParams(
+  eventName: string,
+  params?: Record<string, unknown>
+): boolean {
   if (typeof window === "undefined" || typeof window.fbq !== "function") {
     return false;
   }
 
-  window.fbq("track", eventName);
+  if (params) {
+    window.fbq("track", eventName, params);
+  } else {
+    window.fbq("track", eventName);
+  }
+
   return true;
 }
 
@@ -35,5 +48,22 @@ export function consumeMetaPixelLeadPending(): boolean {
   }
 
   sessionStorage.removeItem(META_PIXEL_LEAD_PENDING_KEY);
+  return true;
+}
+
+export function setMetaPixelPurchasePending() {
+  sessionStorage.setItem(META_PIXEL_PURCHASE_PENDING_KEY, "1");
+}
+
+export function hasMetaPixelPurchasePending(): boolean {
+  return sessionStorage.getItem(META_PIXEL_PURCHASE_PENDING_KEY) === "1";
+}
+
+export function consumeMetaPixelPurchasePending(): boolean {
+  if (!hasMetaPixelPurchasePending()) {
+    return false;
+  }
+
+  sessionStorage.removeItem(META_PIXEL_PURCHASE_PENDING_KEY);
   return true;
 }

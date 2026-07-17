@@ -6,7 +6,6 @@ import {
   REGISTRATION_CONFIRMATION_EMAIL_SUBJECT,
 } from "@/lib/email/registration-confirmation-html";
 import { getResendConfig, isResendConfigured } from "@/lib/email/resend-client";
-import type { CreateRegistrationResult } from "@/lib/registration/create-registration";
 import { syncRegistrationToZohoWebinar } from "@/lib/registration/register-zoho-attendee";
 import { getThankYouJoinUrl } from "@/lib/registration/thank-you-join-url";
 import {
@@ -14,6 +13,10 @@ import {
   getWebinarEmailContext,
 } from "@/lib/webinar-schedule";
 import type { WebinarRegistrationRecord } from "@/types/registration";
+
+export type CreateRegistrationResult = {
+  registration: WebinarRegistrationRecord;
+};
 
 export type SendRegistrationConfirmationEmailResult =
   | {
@@ -63,8 +66,11 @@ export async function sendRegistrationConfirmationEmail(
     };
   }
 
-  const joinUrl = await getThankYouJoinUrl(registration.id);
-  const sessionForEmail = { ...session, joinUrl };
+  const resolvedJoinUrl =
+    (await getThankYouJoinUrl(registration.id)) ??
+    registration.zoho_join_url?.trim() ??
+    registration.webinar_join_url.trim();
+  const sessionForEmail = { ...session, joinUrl: resolvedJoinUrl };
 
   const appUrl = siteConfig.url.replace(/\/$/, "");
   const calendarUrl = `${appUrl}/api/webinar/calendar?registration=${encodeURIComponent(registration.id)}`;

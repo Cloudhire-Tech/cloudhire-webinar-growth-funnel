@@ -3,9 +3,9 @@ export const faqContent = {
   heading: "FAQ",
   items: [
     {
-      question: "Is the webinar free?",
+      question: "How much does the webinar cost?",
       answer:
-        "Yes — completely free. Registration is required because seats are capped.",
+        "Registration is ₹9 (usually ₹199). Payment is required to reserve your seat and receive your unique join link.",
     },
     {
       question: "Who should attend?",

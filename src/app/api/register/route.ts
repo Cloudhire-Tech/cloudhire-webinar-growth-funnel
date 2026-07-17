@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { handleRegistrationSideEffects } from "@/lib/registration/send-confirmation-email";
-import { createWebinarRegistration } from "@/lib/registration/create-registration";
+import { createWebinarRegistrationCheckout } from "@/lib/registration/create-registration";
+import { isRazorpayConfigured } from "@/lib/payment/config";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { registrationSchema } from "@/lib/validations/registration";
 import { RegistrationError } from "@/types/registration";
@@ -12,6 +12,16 @@ export async function POST(request: Request) {
       {
         error:
           "Registration is temporarily unavailable. Please try again shortly.",
+      },
+      { status: 503 }
+    );
+  }
+
+  if (!isRazorpayConfigured()) {
+    return NextResponse.json(
+      {
+        error:
+          "Payment is temporarily unavailable. Please try again shortly.",
       },
       { status: 503 }
     );
@@ -38,14 +48,17 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await createWebinarRegistration(parsedBody.data);
-
-    await handleRegistrationSideEffects(result);
+    const result = await createWebinarRegistrationCheckout(parsedBody.data);
 
     return NextResponse.json(
       {
         success: true,
         registrationId: result.registration.id,
+        orderId: result.orderId,
+        amount: result.amount,
+        currency: result.currency,
+        keyId: result.keyId,
+        reused: result.reused,
       },
       { status: 201 }
     );
@@ -59,7 +72,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "Something went wrong while saving your registration. Please try again.",
+          "Something went wrong while starting your registration. Please try again.",
       },
       { status: 500 }
     );

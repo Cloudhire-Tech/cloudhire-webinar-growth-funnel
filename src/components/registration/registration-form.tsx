@@ -4,11 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { setMetaPixelLeadPending } from "@/components/analytics/meta-pixel-events";
 import { PrimaryCtaButton } from "@/components/ui/primary-cta-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registrationContent } from "@/content/registration";
+import { openRazorpayCheckout } from "@/lib/payment/open-checkout";
 import {
   registrationSchema,
   type RegistrationFormValues,
@@ -17,6 +17,15 @@ import { cn } from "@/lib/utils";
 
 const inputClassName =
   "h-10 focus-visible:border-orange-500 focus-visible:ring-orange-500/30";
+
+type RegisterApiResponse = {
+  error?: string;
+  registrationId?: string;
+  orderId?: string;
+  amount?: number;
+  currency?: string;
+  keyId?: string;
+};
 
 export function RegistrationForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -46,27 +55,62 @@ export function RegistrationForm() {
         body: JSON.stringify(data),
       });
 
-      const payload = (await response.json()) as {
-        error?: string;
-        registrationId?: string;
-      };
+      const payload = (await response.json()) as RegisterApiResponse;
 
       if (!response.ok) {
         setSubmitError(
           payload.error ??
-            "We couldn't complete your registration. Please try again."
+            "We couldn't start your registration. Please try again."
         );
         return;
       }
 
-      setMetaPixelLeadPending();
-      const thankYouUrl = payload.registrationId
-        ? `/thank-you?registration=${encodeURIComponent(payload.registrationId)}`
-        : "/thank-you";
-      window.location.assign(thankYouUrl);
+      if (
+        !payload.registrationId ||
+        !payload.orderId ||
+        !payload.amount ||
+        !payload.currency ||
+        !payload.keyId
+      ) {
+        setSubmitError(
+          "We couldn't start payment. Please try again in a moment."
+        );
+        return;
+      }
+
+      const checkoutResult = await openRazorpayCheckout({
+        registrationId: payload.registrationId,
+        orderId: payload.orderId,
+        amount: payload.amount,
+        currency: payload.currency,
+        keyId: payload.keyId,
+        prefill: {
+          name: data.fullName.trim(),
+          email: data.email.trim(),
+          contact: data.mobile.trim(),
+        },
+      });
+
+      if (checkoutResult === "paid") {
+        window.location.assign(
+          `/thank-you?registration=${encodeURIComponent(payload.registrationId)}`
+        );
+        return;
+      }
+
+      if (checkoutResult === "failed") {
+        setSubmitError(
+          "Payment failed. Please try again to complete your registration."
+        );
+        return;
+      }
+
+      setSubmitError(
+        "Payment was not completed. Your seat is not reserved until payment succeeds."
+      );
     } catch {
       setSubmitError(
-        "We couldn't reach the registration service. Please check your connection and try again."
+        "We couldn't complete payment. Please check your connection and try again."
       );
     }
   };

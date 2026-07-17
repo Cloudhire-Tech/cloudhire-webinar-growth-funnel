@@ -11,7 +11,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:schedule": "tsx --test src/lib/webinar-schedule.test.ts",
-    "test:zoho": "tsx --test src/lib/zoho/*.test.ts"
+    "test:zoho": "tsx --test src/lib/zoho/*.test.ts",
+    "test:payment": "tsx --test src/lib/payment/*.test.ts",
+    "test": "tsx --test src/lib/webinar-schedule.test.ts src/lib/zoho/*.test.ts src/lib/payment/*.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
