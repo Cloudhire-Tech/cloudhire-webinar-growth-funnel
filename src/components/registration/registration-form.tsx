@@ -121,6 +121,7 @@ export function RegistrationForm() {
         amount: payload.amount,
         currency: payload.currency,
         keyId: payload.keyId,
+        thankYouPath,
         prefill: {
           name: data.fullName.trim(),
           email: data.email.trim(),
@@ -129,7 +130,7 @@ export function RegistrationForm() {
       });
 
       if (checkoutResult === "paid") {
-        window.location.assign(thankYouPath);
+        // Redirect already started inside checkout when thankYouPath is set.
         return;
       }
 

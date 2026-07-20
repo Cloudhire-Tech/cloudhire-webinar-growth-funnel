@@ -52,19 +52,20 @@ export function ThankYouPaymentRetry({
         return;
       }
 
+      const thankYouPath = `/thank-you?registration=${encodeURIComponent(registrationId)}`;
+
       const result = await openRazorpayCheckout({
         registrationId: payload.registrationId ?? registrationId,
         orderId: payload.orderId,
         amount: payload.amount,
         currency: payload.currency,
         keyId: payload.keyId,
+        thankYouPath,
         prefill: { name: fullName, email, contact: mobile },
       });
 
       if (result === "paid") {
-        window.location.assign(
-          `/thank-you?registration=${encodeURIComponent(registrationId)}`
-        );
+        // Redirect already started inside checkout when thankYouPath is set.
         return;
       }
 

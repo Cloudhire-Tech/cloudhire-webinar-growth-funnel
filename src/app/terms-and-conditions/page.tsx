@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { LegalBackLink } from "@/components/layout/legal-back-link";
 import { PageShell } from "@/components/layout/page-shell";
 import { termsAndConditionsContent } from "@/content/terms-and-conditions";
 
@@ -14,6 +15,7 @@ export default function TermsAndConditionsPage() {
     <PageShell showHeaderCta={false} shellVariant="light">
       <main className="container-shell flex-1 py-12 md:py-16 lg:py-20">
         <article className="mx-auto w-full max-w-3xl">
+          <LegalBackLink />
           <p className="text-muted-foreground text-sm font-medium tracking-wide uppercase">
             {termsAndConditionsContent.brandTitle}
           </p>

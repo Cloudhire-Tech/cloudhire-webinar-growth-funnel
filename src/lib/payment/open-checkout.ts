@@ -3,6 +3,10 @@ import {
   trackMetaPixelEventWithParams,
 } from "@/components/analytics/meta-pixel-events";
 import {
+  redirectToThankYou,
+  showPaymentSuccessTransition,
+} from "@/lib/payment/payment-redirect";
+import {
   WEBINAR_PAYMENT_AMOUNT_INR,
   WEBINAR_PAYMENT_CURRENCY,
 } from "@/lib/payment/pricing";
@@ -51,6 +55,8 @@ export type CheckoutOrderPayload = {
   amount: number;
   currency: string;
   keyId: string;
+  /** When set, navigate here immediately after verify — avoids flashing the prior page. */
+  thankYouPath?: string;
   prefill?: {
     name?: string;
     email?: string;
@@ -122,6 +128,8 @@ async function verifyPaymentOnServer(
       razorpay_payment_id: response.razorpay_payment_id,
       razorpay_signature: response.razorpay_signature,
     }),
+    // Keep the request alive if navigation starts immediately after verify.
+    keepalive: true,
   });
 
   const payload = (await verifyResponse.json()) as { error?: string };
@@ -158,14 +166,22 @@ export async function openRazorpayCheckout(
       theme: { color: "#ea580c" },
       handler: async (response) => {
         try {
+          // Cover the page as soon as Razorpay closes so the landing never flashes.
+          showPaymentSuccessTransition();
           await verifyPaymentOnServer(order, response);
           trackMetaPixelEventWithParams("Purchase", {
             value: WEBINAR_PAYMENT_AMOUNT_INR,
             currency: WEBINAR_PAYMENT_CURRENCY,
             content_name: "CloudHire Webinar",
           });
+
+          if (order.thankYouPath) {
+            redirectToThankYou(order.thankYouPath);
+          }
+
           resolve("paid");
         } catch (error) {
+          document.getElementById("payment-success-transition")?.remove();
           reject(error);
         }
       },

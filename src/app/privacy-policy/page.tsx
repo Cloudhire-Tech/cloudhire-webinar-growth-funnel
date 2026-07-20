@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { LegalBackLink } from "@/components/layout/legal-back-link";
 import { PageShell } from "@/components/layout/page-shell";
 import { privacyPolicyContent } from "@/content/privacy-policy";
 
@@ -14,6 +15,7 @@ export default function PrivacyPolicyPage() {
     <PageShell showHeaderCta={false} shellVariant="light">
       <main className="container-shell flex-1 py-12 md:py-16 lg:py-20">
         <article className="mx-auto w-full max-w-3xl">
+          <LegalBackLink />
           <h1 className="text-foreground text-3xl font-semibold tracking-tight md:text-4xl">
             {privacyPolicyContent.title}
           </h1>
