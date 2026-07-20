@@ -5,7 +5,7 @@ export const faqContent = {
     {
       question: "How much does the webinar cost?",
       answer:
-        "Registration is ₹9 (usually ₹199). Payment is required to reserve your seat and receive your unique join link.",
+        "Payment is required to reserve your seat and receive your unique join link.",
     },
     {
       question: "Who should attend?",

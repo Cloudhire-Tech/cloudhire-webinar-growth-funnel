@@ -1,5 +1,5 @@
 export const registrationContent = {
-  submitLabel: "Reserve My Seat ₹9 →",
+  submitLabel: "Reserve My Seat →",
   completeSubmitting: "Starting payment...",
   fields: {
     fullName: { label: "Full name", placeholder: "Full name" },

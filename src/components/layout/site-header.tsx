@@ -28,7 +28,7 @@ export function SiteHeader({
         {showCta ? (
           <PrimaryCtaButton
             href="#register"
-            label="Reserve My Seat ₹9 →"
+            label="Reserve My Seat →"
             className="h-9 min-w-0 px-4 text-xs sm:h-10 sm:px-5 sm:text-sm"
           />
         ) : (

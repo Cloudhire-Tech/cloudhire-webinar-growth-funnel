@@ -11,20 +11,22 @@ import {
 import { isPaidRegistration } from "../db/webinar-registrations.ts";
 
 describe("paid webinar copy", () => {
-  it("removes Free webinar messaging from CTAs and FAQ", () => {
+  it("keeps landing CTAs generic without visible ₹9 pricing", () => {
     const sticky = getStickyCtaContent(new Date("2026-07-17T10:00:00+05:30"));
     const finalCta = getFinalCtaContent(new Date("2026-07-17T10:00:00+05:30"));
 
-    assert.match(sticky.line1, /₹199 → ₹9/);
-    assert.match(sticky.button, /₹9/);
-    assert.match(finalCta.button, /₹9/);
-    assert.match(finalCta.microcopy, /₹9/);
-    assert.match(registrationContent.submitLabel, /₹9/);
+    assert.doesNotMatch(sticky.line1, /₹9/);
+    assert.doesNotMatch(sticky.button, /₹9/);
+    assert.doesNotMatch(finalCta.button, /₹9/);
+    assert.doesNotMatch(finalCta.microcopy, /₹9/);
+    assert.doesNotMatch(registrationContent.submitLabel, /₹9/);
     assert.equal(faqContent.items[0]?.question, "How much does the webinar cost?");
-    assert.match(faqContent.items[0]?.answer ?? "", /₹9/);
+    assert.doesNotMatch(faqContent.items[0]?.answer ?? "", /₹9/);
+    assert.doesNotMatch(siteConfig.description, /₹9/);
     assert.doesNotMatch(siteConfig.description, /free seat/i);
     assert.doesNotMatch(sticky.line1, /\bFREE\b/);
     assert.doesNotMatch(registrationContent.proofText, /100% free/i);
+    assert.equal(registrationContent.submitLabel, "Reserve My Seat →");
   });
 });
 
