@@ -15,7 +15,7 @@ import {
   getWebinarRegistrationById,
   isPaidRegistration,
 } from "@/lib/db/webinar-registrations";
-import { getThankYouJoinUrl } from "@/lib/registration/thank-you-join-url";
+import { resolvePaidRegistrationJoinUrl } from "@/lib/registration/thank-you-join-url";
 
 export const metadata: Metadata = {
   title: "Thank You",
@@ -76,7 +76,7 @@ export default async function ThankYouPage({ searchParams }: ThankYouPageProps) 
   }
 
   const webinarDetails = getWebinarDetails();
-  const joinUrl = await getThankYouJoinUrl(registration.id);
+  const joinUrl = resolvePaidRegistrationJoinUrl(registration);
   const displayDate = formatRegistrationDate(registration.webinar_date);
 
   return (

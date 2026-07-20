@@ -7,6 +7,7 @@ import {
 } from "@/lib/db/webinar-registrations";
 import { getRazorpayKeyId, isRazorpayConfigured } from "@/lib/payment/config";
 import {
+  getWebinarPaymentAmountPaise,
   WEBINAR_PAYMENT_AMOUNT_INR,
   WEBINAR_PAYMENT_CURRENCY,
   WEBINAR_PAYMENT_PROVIDER,
@@ -52,6 +53,22 @@ async function attachRazorpayOrder(
       "CONFIGURATION_ERROR",
       503
     );
+  }
+
+  // Reuse a pending unpaid order to avoid an extra Razorpay API round-trip.
+  if (
+    registration.payment_order_id &&
+    registration.payment_status !== "paid" &&
+    registration.payment_status !== "failed"
+  ) {
+    return {
+      registration,
+      orderId: registration.payment_order_id,
+      amount: getWebinarPaymentAmountPaise(),
+      currency: registration.payment_currency ?? WEBINAR_PAYMENT_CURRENCY,
+      keyId,
+      reused: true,
+    };
   }
 
   try {

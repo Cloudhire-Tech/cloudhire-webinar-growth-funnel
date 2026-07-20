@@ -1,7 +1,10 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 import { getRazorpayServerConfig } from "@/lib/payment/config";
-import { completePaidRegistration } from "@/lib/payment/complete-payment";
+import {
+  completePaidRegistration,
+  runPaidRegistrationSideEffects,
+} from "@/lib/payment/complete-payment";
 import { verifyWebhookSignature } from "@/lib/payment/razorpay";
 import {
   getWebinarRegistrationByPaymentOrderId,
@@ -112,6 +115,17 @@ export async function POST(request: Request) {
       orderId,
       paymentId,
     });
+
+    if (result.needsSideEffects) {
+      after(() =>
+        runPaidRegistrationSideEffects(result.registration).catch((error) => {
+          console.error("Deferred webhook side effects failed", {
+            registrationId: result.registration.id,
+            error,
+          });
+        })
+      );
+    }
 
     console.info("Razorpay webhook completed paid registration", {
       event,

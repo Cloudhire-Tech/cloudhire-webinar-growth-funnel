@@ -1,8 +1,11 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getRazorpayServerConfig } from "@/lib/payment/config";
-import { completePaidRegistration } from "@/lib/payment/complete-payment";
+import {
+  completePaidRegistration,
+  runPaidRegistrationSideEffects,
+} from "@/lib/payment/complete-payment";
 import { verifyCheckoutPaymentSignature } from "@/lib/payment/razorpay";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
 
@@ -16,7 +19,7 @@ const verifySchema = z.object({
 /**
  * Primary payment verification for checkout success.
  * Verifies the Razorpay payment signature with RAZORPAY_KEY_SECRET, then
- * marks the registration paid and runs Zoho/email side effects.
+ * marks the registration paid and schedules Zoho/email side effects.
  * Does not require a webhook or RAZORPAY_WEBHOOK_SECRET.
  */
 export async function POST(request: Request) {
@@ -86,6 +89,20 @@ export async function POST(request: Request) {
       paymentId,
       registrationId,
     });
+
+    if (result.needsSideEffects) {
+      after(() =>
+        runPaidRegistrationSideEffects(result.registration).catch((error) => {
+          console.error(
+            "Deferred paid registration side effects failed",
+            {
+              registrationId: result.registration.id,
+              error,
+            }
+          );
+        })
+      );
+    }
 
     return NextResponse.json({
       success: true,

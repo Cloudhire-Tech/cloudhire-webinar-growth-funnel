@@ -58,35 +58,55 @@ export type CheckoutOrderPayload = {
   };
 };
 
-function loadRazorpayScript(): Promise<boolean> {
-  return new Promise((resolve) => {
-    if (typeof window === "undefined") {
-      resolve(false);
-      return;
-    }
+const RAZORPAY_SCRIPT_SRC = "https://checkout.razorpay.com/v1/checkout.js";
 
-    if (window.Razorpay) {
-      resolve(true);
-      return;
-    }
+let razorpayScriptPromise: Promise<boolean> | null = null;
 
+/** Prefetch the Razorpay Checkout script without opening checkout. */
+export function preloadRazorpayScript(): Promise<boolean> {
+  if (typeof window === "undefined") {
+    return Promise.resolve(false);
+  }
+
+  if (window.Razorpay) {
+    return Promise.resolve(true);
+  }
+
+  if (razorpayScriptPromise) {
+    return razorpayScriptPromise;
+  }
+
+  razorpayScriptPromise = new Promise((resolve) => {
     const existing = document.querySelector<HTMLScriptElement>(
-      'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
+      `script[src="${RAZORPAY_SCRIPT_SRC}"]`
     );
 
     if (existing) {
-      existing.addEventListener("load", () => resolve(true));
-      existing.addEventListener("error", () => resolve(false));
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+
+      existing.addEventListener("load", () => resolve(true), { once: true });
+      existing.addEventListener("error", () => {
+        razorpayScriptPromise = null;
+        resolve(false);
+      }, { once: true });
       return;
     }
 
     const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.src = RAZORPAY_SCRIPT_SRC;
     script.async = true;
     script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
+    script.onerror = () => {
+      razorpayScriptPromise = null;
+      resolve(false);
+    };
     document.body.appendChild(script);
   });
+
+  return razorpayScriptPromise;
 }
 
 async function verifyPaymentOnServer(
@@ -114,7 +134,7 @@ async function verifyPaymentOnServer(
 export async function openRazorpayCheckout(
   order: CheckoutOrderPayload
 ): Promise<"paid" | "dismissed" | "failed"> {
-  const loaded = await loadRazorpayScript();
+  const loaded = await preloadRazorpayScript();
 
   if (!loaded || !window.Razorpay) {
     throw new Error("Could not load Razorpay Checkout. Please try again.");

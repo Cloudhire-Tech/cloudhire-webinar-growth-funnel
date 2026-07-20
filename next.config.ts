@@ -6,7 +6,13 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   experimental: {
-    optimizePackageImports: ["lucide-react", "date-fns", "date-fns-tz"],
+    optimizePackageImports: [
+      "lucide-react",
+      "date-fns",
+      "date-fns-tz",
+      "@hookform/resolvers",
+      "zod",
+    ],
   },
   async headers() {
     return [

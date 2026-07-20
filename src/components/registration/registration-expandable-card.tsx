@@ -1,7 +1,16 @@
-import { RegistrationForm } from "@/components/registration/registration-form";
+import dynamic from "next/dynamic";
+
 import { RegistrationProofRow } from "@/components/registration/registration-proof-row";
 import { registrationContent } from "@/content/registration";
 import { getWebinarDetails } from "@/content/webinar";
+
+const RegistrationForm = dynamic(
+  () =>
+    import("@/components/registration/registration-form").then((module) => ({
+      default: module.RegistrationForm,
+    })),
+  { ssr: true }
+);
 
 export function RegistrationExpandableCard() {
   const webinar = getWebinarDetails();

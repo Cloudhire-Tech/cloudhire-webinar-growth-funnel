@@ -14,12 +14,13 @@ import type { WebinarRegistrationRecord } from "@/types/registration";
 export type CompletePaidRegistrationResult = {
   registration: WebinarRegistrationRecord;
   alreadyPaid: boolean;
+  needsSideEffects: boolean;
 };
 
 /**
- * Idempotently marks a registration as paid and runs Zoho + email side effects.
- * Called from /api/payment/verify after checkout signature verification.
- * Also safe to call from an optional Razorpay webhook if configured later.
+ * Marks registration as paid after signature verification.
+ * Zoho/email side effects are returned as a flag so the API can finish the
+ * HTTP response first, then run them via next/server `after()`.
  */
 export async function completePaidRegistration(input: {
   orderId: string;
@@ -84,16 +85,15 @@ export async function completePaidRegistration(input: {
   }
 
   const needsSideEffects =
+    !alreadyPaid ||
     registration.zoho_registration_status !== "registered" ||
     !registration.zoho_join_url;
 
-  if (needsSideEffects) {
-    await handleRegistrationSideEffects({ registration });
-    const refreshed = await getWebinarRegistrationById(registration.id);
-    if (refreshed) {
-      registration = refreshed;
-    }
-  }
+  return { registration, alreadyPaid, needsSideEffects };
+}
 
-  return { registration, alreadyPaid };
+export async function runPaidRegistrationSideEffects(
+  registration: WebinarRegistrationRecord
+) {
+  await handleRegistrationSideEffects({ registration });
 }

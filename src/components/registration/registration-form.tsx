@@ -1,14 +1,18 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { PrimaryCtaButton } from "@/components/ui/primary-cta-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registrationContent } from "@/content/registration";
-import { openRazorpayCheckout } from "@/lib/payment/open-checkout";
+import {
+  openRazorpayCheckout,
+  preloadRazorpayScript,
+} from "@/lib/payment/open-checkout";
 import {
   registrationSchema,
   type RegistrationFormValues,
@@ -28,6 +32,7 @@ type RegisterApiResponse = {
 };
 
 export function RegistrationForm() {
+  const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -43,8 +48,35 @@ export function RegistrationForm() {
     },
   });
 
+  useEffect(() => {
+    let idleId: number | undefined;
+    let timeoutId: number | undefined;
+
+    const warmCheckout = () => {
+      void preloadRazorpayScript();
+    };
+
+    if (typeof window.requestIdleCallback === "function") {
+      idleId = window.requestIdleCallback(warmCheckout, { timeout: 2500 });
+    } else {
+      timeoutId = window.setTimeout(warmCheckout, 1200);
+    }
+
+    return () => {
+      if (idleId !== undefined && typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
   const onSubmit = async (data: RegistrationFormValues) => {
     setSubmitError(null);
+
+    // Warm the checkout script while the registration/order API runs.
+    const scriptWarmup = preloadRazorpayScript();
 
     try {
       const response = await fetch("/api/register", {
@@ -78,6 +110,11 @@ export function RegistrationForm() {
         return;
       }
 
+      const thankYouPath = `/thank-you?registration=${encodeURIComponent(payload.registrationId)}`;
+      router.prefetch(thankYouPath);
+
+      await scriptWarmup;
+
       const checkoutResult = await openRazorpayCheckout({
         registrationId: payload.registrationId,
         orderId: payload.orderId,
@@ -92,9 +129,7 @@ export function RegistrationForm() {
       });
 
       if (checkoutResult === "paid") {
-        window.location.assign(
-          `/thank-you?registration=${encodeURIComponent(payload.registrationId)}`
-        );
+        window.location.assign(thankYouPath);
         return;
       }
 
