@@ -32,7 +32,7 @@ export function SiteFooter({ variant = "light" }: SiteFooterProps) {
               href={footerContent.termsUrl}
               className="text-sm text-white/55 transition-colors hover:text-white"
             >
-              Terms
+              {footerContent.termsLabel}
             </Link>
           </nav>
           <p className="text-xs text-white/40">
@@ -62,7 +62,7 @@ export function SiteFooter({ variant = "light" }: SiteFooterProps) {
               href={footerContent.termsUrl}
               className="text-muted-foreground hover:text-foreground text-sm transition-colors"
             >
-              Terms
+              {footerContent.termsLabel}
             </Link>
           </nav>
         </div>

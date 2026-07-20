@@ -1,4 +1,5 @@
 export const footerContent = {
-  privacyPolicyUrl: "#",
-  termsUrl: "#",
+  privacyPolicyUrl: "/privacy-policy",
+  termsUrl: "/terms-and-conditions",
+  termsLabel: "Terms & Conditions",
 } as const;
