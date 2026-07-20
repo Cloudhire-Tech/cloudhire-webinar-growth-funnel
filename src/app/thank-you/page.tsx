@@ -85,18 +85,18 @@ function WebinarActionLinks({
   }
 
   return (
-    <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-start">
+    <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-stretch">
       <Link
         href={joinUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-primary inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+        className="bg-primary inline-flex h-11 min-h-11 w-full flex-1 items-center justify-center whitespace-nowrap rounded-xl px-4 text-sm font-semibold text-white transition-colors hover:bg-orange-600 sm:w-auto"
       >
         Open webinar link
       </Link>
       <Link
         href={`/api/webinar/calendar?registration=${encodeURIComponent(registrationId)}`}
-        className="border-border text-foreground inline-flex h-11 items-center justify-center rounded-xl border bg-white px-5 text-sm font-semibold transition-colors hover:bg-stone-50"
+        className="border-border text-foreground inline-flex h-11 min-h-11 w-full flex-1 items-center justify-center whitespace-nowrap rounded-xl border bg-white px-4 text-sm font-semibold transition-colors hover:bg-stone-50 sm:w-auto"
       >
         Add to calendar (.ics)
       </Link>
